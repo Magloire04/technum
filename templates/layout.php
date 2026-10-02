@@ -21,7 +21,8 @@ $canonical = 'https://bytechnum.com' . $meta['path'];
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="<?= e($view->asset('img/favicon.svg')) ?>" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preload" href="<?= e($view->asset('fonts/montserrat-700.woff2')) ?>" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/montserrat-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/poppins-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="<?= e($view->asset('css/site.css')) ?>">
   <script src="<?= e($view->asset('js/site.js')) ?>"></script>
 </head>
