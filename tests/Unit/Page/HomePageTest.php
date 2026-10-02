@@ -68,6 +68,11 @@ final class HomePageTest extends TestCase
         self::assertContains('mailto:elisee.atonde@bytechnum.com', $this->html->attributes('.contact-direct a', 'href'));
     }
 
+    public function testDirectContactEmailCanOnlyWrapBeforeTheAtSign(): void
+    {
+        self::assertStringContainsString('>elisee.atonde<wbr>@bytechnum.com</a>', $this->source);
+    }
+
     public function testPageRespectsTheContentSecurityPolicy(): void
     {
         self::assertSame(0, $this->html->count('[style]'));

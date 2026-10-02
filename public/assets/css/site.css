@@ -1041,12 +1041,136 @@ main:focus {
     gap: var(--space-7);
   }
 
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Formulaire et contact direct côte à côte : seulement quand la carte garde assez de largeur */
+
+@media (min-width: 75rem) {
   .contact {
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     align-items: start;
   }
+}
 
-  .site-footer__inner {
-    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
-  }
+/* Formulaire de contact */
+
+.contact-form-area {
+  min-width: 0;
+}
+
+.contact-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.form-field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.form-field__label {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.form-field__hint {
+  color: var(--charcoal-soft);
+  font-family: var(--font-text);
+  font-weight: 400;
+}
+
+.form-field__help {
+  color: var(--charcoal-soft);
+  font-size: var(--text-small);
+}
+
+.form-control {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--charcoal-muted);
+  border-radius: var(--radius-control);
+  background: var(--white);
+  color: var(--charcoal);
+  font: inherit;
+}
+
+textarea.form-control {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--blue);
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+}
+
+.form-control[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+.form-error {
+  color: var(--error);
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+.form-consent {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-2) var(--space-3);
+}
+
+.form-consent input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--blue);
+}
+
+.form-consent__link,
+.form-consent .form-error {
+  grid-column: 2;
+  font-size: var(--text-small);
+}
+
+.form-status {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-control);
+}
+
+.form-status--success {
+  background: var(--ice);
+  color: var(--blue-dark);
+  font-weight: 500;
+}
+
+.form-status--error {
+  border: 1px solid var(--error);
+  background: var(--white);
+  color: var(--error);
+}
+
+.contact-form__submit {
+  justify-self: start;
+}
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
