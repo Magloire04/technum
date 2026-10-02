@@ -5,6 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
+        "phpmailer/phpmailer": "^7.1",
         "vlucas/phpdotenv": "^5.7"
     },
     "autoload": {
