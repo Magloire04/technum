@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Technum\Tests\Unit\Page;
 
 use PHPUnit\Framework\TestCase;
+use Technum\Contact\ContactFormState;
 use Technum\Content\ContentRepository;
 use Technum\Page\HomePage;
 use Technum\Tests\Support\Html;
@@ -23,7 +24,7 @@ final class HomePageTest extends TestCase
         $content = new ContentRepository(self::ROOT . '/content', self::ROOT . '/public');
         $view = new View(self::ROOT . '/templates', self::ROOT . '/public');
         $view->share(['site' => $content->site(), 'products' => $content->products()]);
-        $this->source = (new HomePage($view, $content))->render();
+        $this->source = (new HomePage($view, $content))->render(new ContactFormState('jeton-de-test'));
         $this->html = Html::parse($this->source);
     }
 
@@ -65,6 +66,11 @@ final class HomePageTest extends TestCase
         self::assertStringStartsWith('https://wa.me/2290150617300?text=', $this->html->attribute('.contact-direct__action', 'href'));
         self::assertContains('tel:+2290150617300', $this->html->attributes('.contact-direct a', 'href'));
         self::assertContains('mailto:elisee.atonde@bytechnum.com', $this->html->attributes('.contact-direct a', 'href'));
+    }
+
+    public function testDirectContactEmailCanOnlyWrapBeforeTheAtSign(): void
+    {
+        self::assertStringContainsString('>elisee.atonde<wbr>@bytechnum.com</a>', $this->source);
     }
 
     public function testPageRespectsTheContentSecurityPolicy(): void

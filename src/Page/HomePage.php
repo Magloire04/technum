@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Technum\Page;
 
+use Technum\Contact\ContactFormState;
+use Technum\Contact\ContactRequest;
 use Technum\Content\ContentRepository;
 use Technum\View\View;
 
@@ -20,11 +22,13 @@ final class HomePage
     ) {
     }
 
-    public function render(): string
+    public function render(ContactFormState $form): string
     {
         return $this->view->renderPage('home', [
             'projects' => $this->content->projects(),
             'services' => $this->content->services(),
+            'form' => $form,
+            'needs' => ContactRequest::NEEDS,
         ], [
             'title' => self::TITLE,
             'description' => self::DESCRIPTION,
