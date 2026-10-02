@@ -76,6 +76,14 @@ final class HomePageTest extends TestCase
         }
     }
 
+    public function testFontPreloadUsesTheSameAddressAsTheStylesheet(): void
+    {
+        $stylesheet = (string) file_get_contents(self::ROOT . '/public/assets/css/site.css');
+
+        self::assertSame('/assets/fonts/montserrat-700.woff2', $this->html->attribute('link[rel="preload"][as="font"]', 'href'));
+        self::assertStringContainsString("url('../fonts/montserrat-700.woff2')", $stylesheet);
+    }
+
     public function testEveryAssetReferencedByThePageExists(): void
     {
         preg_match_all('#/assets/([^"\'?\s,]+)#', $this->source, $matches);

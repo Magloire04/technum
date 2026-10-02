@@ -73,7 +73,7 @@
   --radius-frame: 12px;
   --radius-panel: 16px;
 
-  --container: 75rem;
+  --container: 80rem;
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --measure: 66ch;
   --header-height: 4.5rem;
@@ -366,7 +366,7 @@ main:focus {
 }
 
 .hero__title {
-  max-width: 15ch;
+  max-width: 18ch;
   font-size: var(--text-h1);
   line-height: 1.1;
 }
@@ -644,8 +644,7 @@ main:focus {
 }
 
 .product__media--phone .product__frame img {
-  width: auto;
-  max-width: 16rem;
+  width: min(16rem, 100%);
   border: 1px solid var(--line);
   border-radius: 20px;
 }
