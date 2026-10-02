@@ -1042,16 +1042,29 @@ main:focus {
   }
 
   .site-footer__inner {
-    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
   }
 }
 
-/* Formulaire et contact direct côte à côte : seulement quand la carte garde assez de largeur */
+/* Grands écrans : formulaire et contact direct côte à côte, pied de page sur quatre colonnes.
+   En dessous, ces colonnes seraient trop étroites pour l'adresse e-mail et le téléphone. */
 
 @media (min-width: 75rem) {
   .contact {
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     align-items: start;
+  }
+
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+  }
+
+  .site-footer__brand {
+    grid-column: auto;
   }
 }
 
@@ -1173,4 +1186,54 @@ textarea.form-control {
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+/* Un numéro de téléphone ne se coupe jamais */
+
+a[href^='tel:'] {
+  white-space: nowrap;
+}
+
+/* Pages légales */
+
+.legal {
+  padding: var(--space-8) 0 var(--space-9);
+}
+
+.legal__inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.legal__content {
+  max-width: var(--measure);
+}
+
+.legal h1 {
+  font-size: var(--text-h2);
+}
+
+.legal__updated {
+  margin-top: var(--space-3);
+  color: var(--charcoal-soft);
+  font-size: var(--text-small);
+}
+
+.legal h2 {
+  margin-top: var(--space-7);
+  font-size: var(--text-h3);
+}
+
+.legal p,
+.legal ul {
+  margin-top: var(--space-3);
+}
+
+.legal ul {
+  padding-left: 1.25rem;
+}
+
+.legal li + li {
+  margin-top: var(--space-2);
 }

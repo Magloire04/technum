@@ -73,6 +73,13 @@ final class HomePageTest extends TestCase
         self::assertStringContainsString('>elisee.atonde<wbr>@bytechnum.com</a>', $this->source);
     }
 
+    public function testFooterEmailCanOnlyWrapBeforeTheAtSign(): void
+    {
+        $link = $this->html->elements('.site-footer a[href^="mailto:"]')[0];
+
+        self::assertSame('elisee.atonde<wbr>@bytechnum.com', $link->innerHTML);
+    }
+
     public function testPageRespectsTheContentSecurityPolicy(): void
     {
         self::assertSame(0, $this->html->count('[style]'));
