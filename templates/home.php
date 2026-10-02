@@ -4,6 +4,8 @@
  * @var list<Technum\Content\Product> $products
  * @var list<Technum\Content\Project> $projects
  * @var list<Technum\Content\Service> $services
+ * @var Technum\Contact\ContactFormState $form
+ * @var array<string, string> $needs
  */
 ?>
 <section class="hero" aria-labelledby="titre-accueil">
@@ -148,6 +150,7 @@
     </div>
     <div class="section__body">
       <div class="contact">
+        <?= $view->render('partials/contact-form', ['form' => $form, 'needs' => $needs]) ?>
         <?= $view->render('partials/contact-direct') ?>
       </div>
     </div>

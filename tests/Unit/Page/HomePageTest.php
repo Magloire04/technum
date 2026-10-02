@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Technum\Tests\Unit\Page;
 
 use PHPUnit\Framework\TestCase;
+use Technum\Contact\ContactFormState;
 use Technum\Content\ContentRepository;
 use Technum\Page\HomePage;
 use Technum\Tests\Support\Html;
@@ -23,7 +24,7 @@ final class HomePageTest extends TestCase
         $content = new ContentRepository(self::ROOT . '/content', self::ROOT . '/public');
         $view = new View(self::ROOT . '/templates', self::ROOT . '/public');
         $view->share(['site' => $content->site(), 'products' => $content->products()]);
-        $this->source = (new HomePage($view, $content))->render();
+        $this->source = (new HomePage($view, $content))->render(new ContactFormState('jeton-de-test'));
         $this->html = Html::parse($this->source);
     }
 
