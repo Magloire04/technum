@@ -60,9 +60,7 @@ final class Html
     {
         $elements = [];
         foreach ($this->document->querySelectorAll($selector) as $element) {
-            if ($element instanceof Element) {
-                $elements[] = $element;
-            }
+            $elements[] = $element;
         }
 
         return $elements;
