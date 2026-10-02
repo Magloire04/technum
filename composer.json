@@ -9,7 +9,10 @@
     "autoload": {
         "psr-4": {
             "Technum\\": "src/"
-        }
+        },
+        "files": [
+            "src/View/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
