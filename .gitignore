@@ -1,0 +1,21 @@
+# Dépendances
+/vendor/
+/node_modules/
+
+# Configuration locale et secrets
+/.env
+
+# Fichiers écrits par l'application
+/storage/rate-limit/*
+!/storage/rate-limit/.gitkeep
+
+# Documents de marque internes : brand book et logos sources
+/documentations/
+
+# Caches des outils de qualité
+/.phpunit.cache/
+/.php-cs-fixer.cache
+
+# Système
+.DS_Store
+Thumbs.db
