@@ -52,15 +52,18 @@ final class ContactController
         if ($tokenStatus === TokenStatus::Expired) {
             $this->securityLog->record('contact.token_expired', $now);
 
-            return $this->redisplay($contact, $now, 422, 'Le formulaire a expiré. Vérifiez vos informations, puis envoyez-les de nouveau.', $contact->errors);
+            return $this->redisplay($contact, $this->formToken->issue($now), 422, 'Le formulaire a expiré. Vérifiez vos informations, puis envoyez-les de nouveau.', $contact->errors);
         }
+
+        // Le jeton est valide : le formulaire réaffiché le garde, pour qu'une correction rapide ne passe pas pour un robot.
+        $token = $request->input('token');
         if (!$contact->isValid()) {
-            return $this->redisplay($contact, $now, 422, "La demande n'est pas partie. Corrigez les champs signalés.", $contact->errors);
+            return $this->redisplay($contact, $token, 422, "La demande n'est pas partie. Corrigez les champs signalés.", $contact->errors);
         }
         if ($this->rateLimiter->isLimited($request->clientIp, $now)) {
             $this->securityLog->record('contact.rate_limited', $now);
 
-            return $this->redisplay($contact, $now, 429, sprintf(
+            return $this->redisplay($contact, $token, 429, sprintf(
                 'Trop de demandes depuis cette connexion. Réessayez dans une heure, ou écrivez-nous sur WhatsApp au %s.',
                 $this->site->phoneDisplay,
             ));
@@ -71,7 +74,7 @@ final class ContactController
         } catch (MailerException) {
             $this->securityLog->record('contact.mail_failed', $now);
 
-            return $this->redisplay($contact, $now, 503, sprintf(
+            return $this->redisplay($contact, $token, 503, sprintf(
                 "L'envoi n'a pas abouti. Écrivez-nous sur WhatsApp au %s ou à %s.",
                 $this->site->phoneDisplay,
                 $this->site->email,
@@ -97,9 +100,9 @@ final class ContactController
     /**
      * @param array<string, string> $errors
      */
-    private function redisplay(ContactRequest $contact, int $now, int $status, string $notice, array $errors = []): Response
+    private function redisplay(ContactRequest $contact, string $token, int $status, string $notice, array $errors = []): Response
     {
-        $form = new ContactFormState($this->formToken->issue($now), $contact->values(), $errors, $notice);
+        $form = new ContactFormState($token, $contact->values(), $errors, $notice);
 
         return Response::html($this->homePage->render($form), $status);
     }

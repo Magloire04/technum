@@ -77,6 +77,19 @@ final class ContactSubmissionTest extends ApplicationTestCase
         self::assertSame([], $this->mailer->sent);
     }
 
+    public function testQuickCorrectionAfterAnErrorIsStillSent(): void
+    {
+        $first = $this->post('/contact', [...$this->validForm(), 'consent' => '']);
+        $token = Html::parse($first->body)->attribute('input[name="token"]', 'value');
+
+        $this->clock->advance(1);
+        $response = $this->post('/contact', [...$this->validForm(), 'token' => $token]);
+
+        self::assertSame(422, $first->status);
+        self::assertSame(303, $response->status);
+        self::assertCount(1, $this->mailer->sent);
+    }
+
     public function testRedisplayedValuesAreEscaped(): void
     {
         $response = $this->post('/contact', [...$this->validForm(), 'name' => '<script>alert(1)</script>', 'email' => 'pas-valide']);
@@ -122,6 +135,18 @@ final class ContactSubmissionTest extends ApplicationTestCase
         self::assertStringContainsString('Le formulaire a expiré', $html->text('.form-status--error'));
         self::assertSame('Awa Dossou', $html->attribute('#contact-name', 'value'));
         self::assertSame([], $this->mailer->sent);
+    }
+
+    public function testExpiredFormCanBeSentAgainWithItsNewToken(): void
+    {
+        $first = $this->post('/contact', $this->validForm(7201));
+        $token = Html::parse($first->body)->attribute('input[name="token"]', 'value');
+
+        $this->clock->advance(5);
+        $response = $this->post('/contact', [...$this->validForm(), 'token' => $token]);
+
+        self::assertSame(303, $response->status);
+        self::assertCount(1, $this->mailer->sent);
     }
 
     public function testSixthValidRequestWithinAnHourIsRateLimited(): void
