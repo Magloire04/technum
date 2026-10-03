@@ -31,8 +31,26 @@ final class HomePageTest extends TestCase
     public function testHeroCarriesTheBrandPromiseAndTwoActions(): void
     {
         self::assertSame('Des solutions numériques conçues pour vos réalités.', $this->html->text('h1'));
-        self::assertSame('#contact', $this->html->attribute('.hero__actions .button--primary', 'href'));
+        self::assertSame('#contact', $this->html->attribute('.hero__actions .button--light', 'href'));
         self::assertSame('#produits', $this->html->attribute('.hero__more', 'href'));
+    }
+
+    public function testHeroBracesAreDecorative(): void
+    {
+        self::assertSame('true', $this->html->attribute('.hero__braces', 'aria-hidden'));
+        self::assertSame('{}', str_replace(' ', '', $this->html->text('.hero__braces')));
+    }
+
+    public function testStripLinksEachProductToItsTab(): void
+    {
+        self::assertSame(
+            ['#produit-oeil360-finance', '#produit-dis-oui', '#produit-provia', '#produit-carte-uac'],
+            $this->html->attributes('.product-tile', 'href'),
+        );
+        self::assertSame(['Oeil 360° Finance', 'Dis oui', 'PROVIA', 'Carte UAC'], $this->html->texts('.product-tile__name'));
+        self::assertSame(['En service', 'En service', 'Bêta', 'Pilote'], $this->html->texts('.product-tile .chip'));
+        self::assertSame('chip chip--beta', $this->html->attribute('.product-strip li:nth-child(3) .chip', 'class'));
+        self::assertStringContainsString('Projet en cours', $this->html->text('.product-strip li:nth-child(3) .product-tile__summary'));
     }
 
     public function testMenuOffersTheContactOnSmallScreens(): void

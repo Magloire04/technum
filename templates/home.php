@@ -9,18 +9,21 @@
  */
 ?>
 <section class="hero" aria-labelledby="titre-accueil">
+  <div class="hero__braces" aria-hidden="true"><span>{</span><span>}</span></div>
   <div class="hero__inner">
     <div class="hero__text">
       <h1 class="hero__title" id="titre-accueil">Des solutions numériques conçues pour vos réalités.</h1>
       <p class="hero__lead">TECHNUM conçoit, met en ligne et maintient des applications pour les entreprises, les institutions et les porteurs de projets du Bénin. Nos propres produits sont déjà en service&nbsp;: vous pouvez les essayer dès maintenant.</p>
       <div class="hero__actions">
-        <a class="button button--primary" href="#contact">Parler de votre projet</a>
+        <a class="button button--light" href="#contact">Parler de votre projet</a>
         <a class="hero__more" href="#produits">Voir nos produits</a>
       </div>
     </div>
     <?= $view->render('partials/register') ?>
   </div>
 </section>
+
+<?= $view->render('partials/product-strip') ?>
 
 <section class="section" id="produits" aria-labelledby="titre-produits">
   <div class="section__inner">

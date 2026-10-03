@@ -1,7 +1,8 @@
 /*
  * Feuille de style de bytechnum.com.
  * Palette, typographie et composants tirés du Brand Book TECHNUM, édition 01, 2026.
- * Seule couleur hors palette : --error, réservée aux erreurs de formulaire.
+ * Hors palette : --error pour les erreurs de formulaire, --on-blue et --on-charcoal pour les textes
+ * secondaires posés sur le bleu foncé et sur le charbon.
  */
 
 @font-face {
@@ -47,6 +48,8 @@
   --white: #ffffff;
   --line: #e5e7ed;
   --error: #b42318;
+  --on-blue: #dde4ff;
+  --on-charcoal: #dcdadb;
 
   --font-display: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
   --font-text: 'Poppins', 'Segoe UI', system-ui, sans-serif;
@@ -240,6 +243,17 @@ main:focus {
   color: var(--blue-dark);
 }
 
+.button--light {
+  background: var(--white);
+  color: var(--blue-dark);
+}
+
+.button--light:hover,
+.button--light:focus-visible {
+  background: var(--ice);
+  color: var(--blue-dark);
+}
+
 /* En-tête */
 
 .site-header {
@@ -362,13 +376,45 @@ main:focus {
   padding: var(--space-3) 0;
 }
 
-/* Accueil */
+/* Accueil : fond bleu de la marque, accolades décoratives, registre sur carte blanche */
 
 .hero {
-  padding: var(--space-7) 0;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-7) 0 calc(var(--space-9) + 3rem);
+  background: var(--blue-dark);
+  color: var(--white);
+}
+
+.hero :focus-visible {
+  outline-color: var(--white);
+}
+
+.hero__braces {
+  position: absolute;
+  top: 0.75rem;
+  right: -1rem;
+  display: flex;
+  gap: 3rem;
+  color: var(--blue);
+  font-family: var(--font-display);
+  font-size: 11rem;
+  font-weight: 700;
+  line-height: 0.9;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero__braces span:first-child {
+  transform: translateX(-1.5rem);
+}
+
+.hero__braces span:last-child {
+  transform: translateX(1.5rem);
 }
 
 .hero__inner {
+  position: relative;
   display: grid;
   gap: var(--space-7);
   max-width: var(--container);
@@ -377,17 +423,18 @@ main:focus {
 }
 
 .hero__title {
-  max-width: 18ch;
-  font-size: var(--text-h1);
-  line-height: 1.1;
+  max-width: 13ch;
+  font-size: clamp(2.5rem, 1.6rem + 3vw, 3.875rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .hero__lead {
   max-width: 34rem;
   margin-top: var(--space-5);
-  color: var(--charcoal-soft);
+  color: var(--on-blue);
   font-size: var(--text-lead);
-  line-height: 1.55;
+  line-height: 1.65;
 }
 
 .hero__actions {
@@ -399,17 +446,60 @@ main:focus {
 }
 
 .hero__more {
+  color: var(--white);
   font-family: var(--font-display);
   font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4em;
+}
+
+.hero__more:hover,
+.hero__more:focus-visible {
+  color: var(--white);
+  text-decoration-color: var(--white);
+}
+
+@media (min-width: 60rem) {
+  .hero {
+    padding: var(--space-8) 0 calc(var(--space-9) + 4rem);
+  }
+
+  .hero__braces {
+    top: 1.5rem;
+    right: 2rem;
+    gap: 14rem;
+    font-size: 29rem;
+  }
+
+  .hero__braces span:first-child {
+    transform: translateX(-4.5rem);
+  }
+
+  .hero__braces span:last-child {
+    transform: translateX(4.5rem);
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--space-8);
+  }
 }
 
 /* Registre des produits : l'élément marquant de la page */
 
 .register {
-  --track-empty: var(--white);
+  --track-empty: var(--ice);
   padding: var(--space-6);
   border-radius: var(--radius-panel);
-  background: var(--ice);
+  background: var(--white);
+  color: var(--charcoal);
+}
+
+.register :focus-visible {
+  outline-color: var(--blue);
 }
 
 .register__title {
@@ -423,7 +513,7 @@ main:focus {
 }
 
 .register__item + .register__item {
-  border-top: 1px solid var(--white);
+  border-top: 1px solid var(--line);
 }
 
 .register__link {
@@ -587,6 +677,136 @@ main:focus {
 
   to {
     transform: scaleX(1);
+  }
+}
+
+/* Vignettes des produits : elles chevauchent le bas de l'accueil et ouvrent l'onglet du produit */
+
+.product-strip {
+  position: relative;
+  max-width: var(--container);
+  margin: -6.5rem auto 0;
+  padding: 0 var(--gutter);
+}
+
+.product-strip__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.product-tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--white);
+  color: var(--charcoal);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.product-tile:hover,
+.product-tile:focus-visible {
+  border-color: var(--blue);
+  color: var(--charcoal);
+  text-decoration: none;
+}
+
+.product-tile__shot {
+  display: flex;
+  justify-content: center;
+  height: 7.5rem;
+  overflow: hidden;
+  padding: var(--space-3) var(--space-3) 0;
+  background: var(--ice);
+}
+
+.product-tile__shot img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px 6px 0 0;
+  object-fit: cover;
+  object-position: top;
+}
+
+.product-tile__shot--phone img {
+  width: 48%;
+  border-radius: 12px 12px 0 0;
+}
+
+.product-tile__body {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.product-tile__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.product-tile__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.product-tile__summary {
+  color: var(--charcoal-soft);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* Pastilles d'état */
+
+.chip {
+  display: inline-block;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip--en-service {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.chip--beta {
+  background: var(--ice);
+  color: var(--blue-dark);
+}
+
+.chip--pilote,
+.chip--conception {
+  border: 1px solid var(--line);
+  background: var(--off-white);
+  color: var(--charcoal);
+}
+
+@media (min-width: 60rem) {
+  .product-strip {
+    margin-top: -7.5rem;
+  }
+
+  .product-strip__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .product-tile__shot {
+    height: 9.75rem;
+    padding: var(--space-4) var(--space-4) 0;
   }
 }
 
@@ -1006,16 +1226,6 @@ main:focus {
   .site-nav__toggle,
   .js .site-nav__toggle {
     display: none;
-  }
-
-  .hero {
-    padding: var(--space-9) 0 var(--space-8);
-  }
-
-  .hero__inner {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    align-items: center;
-    gap: var(--space-8);
   }
 
   .section__inner {
