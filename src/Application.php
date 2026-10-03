@@ -79,6 +79,8 @@ final class Application
         $router = new Router($errors->notFound(...));
         $router->get('/', $home->show(...));
         $router->get('/contact', static fn (Request $request): Response => Response::redirect('/#contact', 301));
+        // Seule adresse de l'ancienne page « Bientôt en ligne ».
+        $router->get('/index.html', static fn (Request $request): Response => Response::redirect('/', 301));
         $router->post('/contact', $contact->submit(...));
         $legal = new LegalController($view);
         foreach (LegalController::pages() as $page) {
