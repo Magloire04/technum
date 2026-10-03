@@ -1198,69 +1198,122 @@ a.service__example:focus-visible {
   }
 }
 
-/* Méthode : une vraie séquence, donc numérotée */
+/* Méthode : une vraie séquence, donc numérotée ; cinq étapes reliées par un trait */
 
 .steps {
+  position: relative;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-6);
   padding: 0;
   list-style: none;
   counter-reset: step;
 }
 
+.steps::before {
+  position: absolute;
+  top: 1.375rem;
+  bottom: 1.375rem;
+  left: calc(1.375rem - 1px);
+  width: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  content: '';
+}
+
 .step {
+  position: relative;
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
+  grid-template-columns: 2.75rem minmax(0, 1fr);
   column-gap: var(--space-4);
   counter-increment: step;
 }
 
 .step::before {
+  display: grid;
   grid-row: span 2;
-  color: var(--blue);
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--blue-dark);
   font-family: var(--font-display);
-  font-size: var(--text-h3);
   font-weight: 700;
-  line-height: 1.25;
   content: counter(step);
 }
 
 .step__title {
-  font-size: 1.125rem;
+  align-self: center;
+  font-size: 1.0625rem;
   line-height: 1.35;
 }
 
 .step__text {
-  max-width: var(--measure);
-  margin-top: var(--space-1);
-  color: var(--charcoal-soft);
+  margin-top: var(--space-2);
+  color: var(--on-blue);
+  font-size: 0.9375rem;
 }
 
 .commitments {
   max-width: var(--measure);
   margin-top: var(--space-7);
-  padding: var(--space-5) var(--space-6);
-  border-radius: var(--radius-panel);
-  background: var(--ice);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--on-blue);
 }
 
-/* Contact */
+@media (min-width: 60rem) {
+  .steps {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .steps::before {
+    top: calc(1.375rem - 1px);
+    right: 1.375rem;
+    bottom: auto;
+    left: 1.375rem;
+    width: auto;
+    height: 2px;
+  }
+
+  .step {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-4);
+  }
+
+  .step::before {
+    grid-row: auto;
+  }
+
+  .step__title {
+    align-self: start;
+  }
+}
+
+/* Contact : formulaire en carte bordée, contact direct sur une carte bleue */
 
 .contact {
   display: grid;
-  gap: var(--space-7);
+  gap: var(--space-6);
+}
+
+.contact .section__head {
+  margin-bottom: 0;
 }
 
 .contact-direct {
   align-self: start;
   padding: var(--space-6);
-  border: 1px solid var(--line);
   border-radius: var(--radius-panel);
-  background: var(--white);
+  background: var(--blue);
+  color: var(--white);
+}
+
+.contact-direct :focus-visible {
+  outline-color: var(--white);
 }
 
 .contact-direct__title {
-  font-size: var(--text-h3);
+  font-size: 1.1875rem;
 }
 
 .contact-direct__action {
@@ -1278,12 +1331,50 @@ a.service__example:focus-visible {
 
 .contact-direct__label {
   display: block;
-  color: var(--charcoal-soft);
   font-size: var(--text-small);
+  font-weight: 500;
 }
 
 .contact-direct__list a {
+  color: var(--white);
   overflow-wrap: anywhere;
+  text-decoration-line: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.5);
+}
+
+.contact-direct__list a:hover,
+.contact-direct__list a:focus-visible {
+  color: var(--white);
+  text-decoration-color: var(--white);
+}
+
+@media (min-width: 75rem) {
+  .contact {
+    grid-template-areas:
+      'head form'
+      'direct form';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    gap: var(--space-6) var(--space-8);
+  }
+
+  .contact .section__head {
+    display: block;
+    grid-area: head;
+  }
+
+  .contact .section__context {
+    margin-top: var(--space-4);
+  }
+
+  .contact-form-area {
+    grid-area: form;
+  }
+
+  .contact-direct {
+    grid-area: direct;
+  }
 }
 
 /* Pages de message : 404 et erreur temporaire */
@@ -1433,15 +1524,10 @@ a.service__example:focus-visible {
   }
 }
 
-/* Grands écrans : formulaire et contact direct côte à côte, pied de page sur quatre colonnes.
+/* Grands écrans : pied de page sur quatre colonnes.
    En dessous, ces colonnes seraient trop étroites pour l'adresse e-mail et le téléphone. */
 
 @media (min-width: 75rem) {
-  .contact {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    align-items: start;
-  }
-
   .site-footer__inner {
     grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
   }
@@ -1455,6 +1541,16 @@ a.service__example:focus-visible {
 
 .contact-form-area {
   min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--white);
+}
+
+@media (min-width: 48rem) {
+  .contact-form-area {
+    padding: var(--space-6);
+  }
 }
 
 .contact-form {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Technum\Tests\Unit\Page;
 
+use Dom\Element;
 use PHPUnit\Framework\TestCase;
 use Technum\Contact\ContactFormState;
 use Technum\Content\ContentRepository;
@@ -95,6 +96,17 @@ final class HomePageTest extends TestCase
         self::assertSame(['PROVIA', 'Carte UAC'], $this->html->texts('.service:nth-child(2) .service__example'));
         self::assertSame(['#produit-provia', '#produit-carte-uac'], $this->html->attributes('.service:nth-child(2) a.service__example', 'href'));
         self::assertSame('Exemples', $this->html->attribute('.service:nth-child(2) .service__examples', 'aria-label'));
+    }
+
+    public function testContactShowsTheFormBeforeTheDirectCard(): void
+    {
+        $classes = array_map(
+            static fn (Element $element): string => (string) $element->getAttribute('class'),
+            $this->html->elements('#contact .contact > *'),
+        );
+
+        self::assertSame(['section__head', 'contact-form-area', 'contact-direct'], $classes);
+        self::assertSame('button button--light contact-direct__action', $this->html->attribute('.contact-direct__action', 'class'));
     }
 
     public function testMenuOffersTheContactOnSmallScreens(): void

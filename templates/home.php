@@ -124,14 +124,12 @@
 </section>
 
 <section class="section section--contact" id="contact" aria-labelledby="titre-contact">
-  <div class="section__inner">
+  <div class="section__inner contact">
     <div class="section__head">
       <h2 class="section__title" id="titre-contact">Parlons de votre projet</h2>
       <p class="section__context">Décrivez votre besoin en quelques lignes. Nous vous répondons par e-mail.</p>
     </div>
-    <div class="contact">
-      <?= $view->render('partials/contact-form', ['form' => $form, 'needs' => $needs]) ?>
-      <?= $view->render('partials/contact-direct') ?>
-    </div>
+    <?= $view->render('partials/contact-form', ['form' => $form, 'needs' => $needs]) ?>
+    <?= $view->render('partials/contact-direct') ?>
   </div>
 </section>
