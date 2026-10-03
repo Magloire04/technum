@@ -35,6 +35,12 @@ final class HomePageTest extends TestCase
         self::assertSame('#produits', $this->html->attribute('.hero__more', 'href'));
     }
 
+    public function testMenuOffersTheContactOnSmallScreens(): void
+    {
+        self::assertSame('Parler de votre projet', $this->html->text('.site-nav__list .site-nav__contact a'));
+        self::assertSame('/#contact', $this->html->attribute('.site-nav__list .site-nav__contact a', 'href'));
+    }
+
     public function testRegisterListsEachProductWithItsStage(): void
     {
         self::assertSame(['Oeil 360° Finance', 'Dis oui', 'PROVIA', 'Carte UAC'], $this->html->texts('.register__name'));
