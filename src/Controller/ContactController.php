@@ -85,7 +85,6 @@ final class ContactController
         }
 
         $this->rateLimiter->hit($request->clientIp, $now);
-        $this->rateLimiter->purgeExpired($now);
 
         return Response::redirect(self::SUCCESS_LOCATION);
     }
