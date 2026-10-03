@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Technum\Tests\Unit\Page;
 
+use Dom\Element;
 use PHPUnit\Framework\TestCase;
 use Technum\Contact\ContactFormState;
 use Technum\Content\ContentRepository;
@@ -31,8 +32,86 @@ final class HomePageTest extends TestCase
     public function testHeroCarriesTheBrandPromiseAndTwoActions(): void
     {
         self::assertSame('Des solutions numériques conçues pour vos réalités.', $this->html->text('h1'));
-        self::assertSame('#contact', $this->html->attribute('.hero__actions .button--primary', 'href'));
+        self::assertSame('#contact', $this->html->attribute('.hero__actions .button--light', 'href'));
         self::assertSame('#produits', $this->html->attribute('.hero__more', 'href'));
+    }
+
+    public function testHeroBracesAreDecorative(): void
+    {
+        self::assertSame('true', $this->html->attribute('.hero__braces', 'aria-hidden'));
+        self::assertSame('{}', str_replace(' ', '', $this->html->text('.hero__braces')));
+    }
+
+    public function testHeroBracesShareTheRegisterCell(): void
+    {
+        self::assertSame(1, $this->html->count('.hero__inner > .hero__braces + .register'));
+    }
+
+    public function testStripLinksEachProductToItsTab(): void
+    {
+        self::assertSame(
+            ['#produit-oeil360-finance', '#produit-dis-oui', '#produit-provia', '#produit-carte-uac'],
+            $this->html->attributes('.product-tile', 'href'),
+        );
+        self::assertSame(['Oeil 360° Finance', 'Dis oui', 'PROVIA', 'Carte UAC'], $this->html->texts('.product-tile__name'));
+        self::assertSame(['En service', 'En service', 'Bêta', 'Pilote'], $this->html->texts('.product-tile .chip'));
+        self::assertSame('chip chip--beta', $this->html->attribute('.product-strip li:nth-child(3) .chip', 'class'));
+        self::assertStringContainsString('Projet en cours', $this->html->text('.product-strip li:nth-child(3) .product-tile__summary'));
+    }
+
+    public function testSectionsAlternateTheirBackgrounds(): void
+    {
+        self::assertSame(
+            ['section', 'section section--ice', 'section section--charcoal section--split', 'section section--blue', 'section section--contact'],
+            $this->html->attributes('main > .section', 'class'),
+        );
+    }
+
+    public function testEachSectionOpensWithItsTitle(): void
+    {
+        self::assertSame(
+            ['Nos produits', 'Autres réalisations', 'Ce que nous faisons pour vous', 'Comment se passe un projet', 'Parlons de votre projet'],
+            $this->html->texts('.section__head .section__title'),
+        );
+        self::assertSame(0, $this->html->count('.section__aside'));
+    }
+
+    public function testProductTabsWaitForTheScript(): void
+    {
+        $tablist = $this->html->elements('.product-tabs')[0];
+
+        self::assertTrue($tablist->hasAttribute('hidden'));
+        self::assertSame('tablist', $tablist->getAttribute('role'));
+        self::assertSame(
+            ['produit-oeil360-finance', 'produit-dis-oui', 'produit-provia', 'produit-carte-uac'],
+            $this->html->attributes('.product-tabs__tab', 'aria-controls'),
+        );
+        self::assertSame(['onglet-oeil360-finance', 'onglet-dis-oui', 'onglet-provia', 'onglet-carte-uac'], $this->html->attributes('.product-tabs__tab', 'id'));
+        self::assertSame(['true', 'false', 'false', 'false'], $this->html->attributes('.product-tabs__tab', 'aria-selected'));
+        self::assertSame(['0', '-1', '-1', '-1'], $this->html->attributes('.product-tabs__tab', 'tabindex'));
+    }
+
+    public function testEveryProductStaysVisibleWithoutTheScript(): void
+    {
+        self::assertSame(4, $this->html->count('#produits .products > .product:not([hidden])'));
+    }
+
+    public function testServiceExamplesAreClickablePills(): void
+    {
+        self::assertSame(['PROVIA', 'Carte UAC'], $this->html->texts('.service:nth-child(2) .service__example'));
+        self::assertSame(['#produit-provia', '#produit-carte-uac'], $this->html->attributes('.service:nth-child(2) a.service__example', 'href'));
+        self::assertSame('Exemples', $this->html->attribute('.service:nth-child(2) .service__examples', 'aria-label'));
+    }
+
+    public function testContactShowsTheFormBeforeTheDirectCard(): void
+    {
+        $classes = array_map(
+            static fn (Element $element): string => (string) $element->getAttribute('class'),
+            $this->html->elements('#contact .contact > *'),
+        );
+
+        self::assertSame(['section__head', 'contact-form-area', 'contact-direct'], $classes);
+        self::assertSame('button button--light contact-direct__action', $this->html->attribute('.contact-direct__action', 'class'));
     }
 
     public function testMenuOffersTheContactOnSmallScreens(): void
@@ -66,7 +145,6 @@ final class HomePageTest extends TestCase
         self::assertStringContainsString('un produit en pause et un mandat client', $this->html->text('#realisations .section__context'));
         self::assertSame(5, $this->html->count('.service'));
         self::assertSame(5, $this->html->count('.step'));
-        self::assertStringContainsString('PROVIA et Carte UAC', $this->html->text('.service:nth-child(2) .service__examples'));
     }
 
     public function testDirectContactUsesTheValidatedDetails(): void

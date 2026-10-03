@@ -54,6 +54,7 @@ final class ContentRepositoryTest extends TestCase
             'name' => 'Exemple',
             'url' => 'https://exemple.bytechnum.com',
             'tagline' => 'Une accroche : simple.',
+            'summary' => 'Un résumé : court.',
             'audience' => 'Tout le monde.',
             'stage' => 'beta',
             'done' => 'Déjà fait.',
@@ -90,6 +91,7 @@ final class ContentRepositoryTest extends TestCase
         self::assertSame('exemple', $product->slug);
         self::assertSame(ProductStage::Beta, $product->stage);
         self::assertSame("Une accroche\u{00A0}: simple.", $product->tagline);
+        self::assertSame("Un résumé\u{00A0}: court.", $product->summary);
         self::assertSame('img/capture.webp', $product->image->src);
     }
 
@@ -106,6 +108,8 @@ final class ContentRepositoryTest extends TestCase
         yield 'adresse http' => [['url' => 'http://exemple.bytechnum.com'], '« url » doit être une adresse https valide'];
         yield 'état inconnu' => [['stage' => 'lancé'], '« stage » doit valoir conception, pilote, beta ou en-service'];
         yield 'nom vide' => [['name' => ' '], '« name » est vide'];
+        yield 'résumé vide' => [['summary' => ' '], '« summary » est vide'];
+        yield 'résumé trop long' => [['summary' => str_repeat('a', 71)], '« summary » compte 70 caractères au plus'];
         yield 'icône absente' => [['icon' => 'img/absente.svg'], 'fichier introuvable, assets/img/absente.svg'];
         yield 'slug invalide' => [['slug' => 'Mon Produit'], '« slug » ne contient que des minuscules'];
         yield 'cadre inconnu' => [['image' => self::image(['frame' => 'tablette'])], '« frame » doit valoir desktop ou phone'];

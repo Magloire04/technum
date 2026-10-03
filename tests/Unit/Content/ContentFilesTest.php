@@ -55,6 +55,19 @@ final class ContentFilesTest extends TestCase
         self::assertFalse($bySlug['carte-uac']->isStable());
     }
 
+    public function testEveryProductHasAShortSummary(): void
+    {
+        self::assertSame(
+            [
+                'Revenus, dépenses et comptes en franc CFA, au même endroit.',
+                'Une demande de rendez-vous transformée en petit jeu.',
+                "Stages\u{00A0}: étudiants et entreprises. Projet en cours.",
+                "Le campus d'Abomey-Calavi, à pied, même sans réseau.",
+            ],
+            array_map(static fn (Product $product): string => $product->summary, $this->content->products()),
+        );
+    }
+
     public function testContactDetailsMatchTheValidatedSpecification(): void
     {
         $site = $this->content->site();
