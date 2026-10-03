@@ -31,6 +31,8 @@ final class Application
     private function __construct(
         private readonly Router $router,
         private readonly bool $isProduction,
+        private readonly RateLimiter $rateLimiter,
+        private readonly Clock $clock,
     ) {
     }
 
@@ -60,12 +62,13 @@ final class Application
             );
 
         $formToken = new FormToken($config->appSecret);
+        $rateLimiter = new RateLimiter($storageDir . '/rate-limit', $config->appSecret);
         $homePage = new HomePage($view, $content);
         $home = new HomeController($homePage, $formToken, $clock);
         $contact = new ContactController(
             $homePage,
             $formToken,
-            new RateLimiter($storageDir . '/rate-limit', $config->appSecret),
+            $rateLimiter,
             $mailer,
             new SecurityLog($storageDir . '/logs/security.log'),
             $clock,
@@ -82,11 +85,13 @@ final class Application
             $router->get('/' . $page, static fn (Request $request): Response => $legal->show($page));
         }
 
-        return new self($router, $config->isProduction());
+        return new self($router, $config->isProduction(), $rateLimiter, $clock);
     }
 
     public function handle(Request $request): Response
     {
+        // Chaque requête efface les empreintes de plus d'une heure, comme le promet la politique de confidentialité.
+        $this->rateLimiter->purgeExpired($this->clock->now());
         $response = $this->router->dispatch($request);
 
         return $this->isProduction
