@@ -113,6 +113,7 @@ final class ContentRepository
             name: $this->text($item, 'name', $context),
             url: $this->httpsUrl($item, 'url', $context, required: false),
             tagline: $this->prose($item, 'tagline', $context),
+            summary: $this->summary($item, $context),
             audience: $this->prose($item, 'audience', $context),
             stage: $stage,
             done: $this->prose($item, 'done', $context),
@@ -254,6 +255,21 @@ final class ContentRepository
     private function prose(array $data, string $key, string $context, bool $required = true): string
     {
         return Typography::french($this->text($data, $key, $context, $required));
+    }
+
+    /**
+     * Résumé d'une vignette de l'accueil : obligatoire, 70 caractères au plus pour tenir sur deux lignes.
+     *
+     * @param array<array-key, mixed> $item
+     */
+    private function summary(array $item, string $context): string
+    {
+        $summary = $this->prose($item, 'summary', $context);
+        if (mb_strlen($summary) > 70) {
+            throw new ContentException($context . ' : « summary » compte 70 caractères au plus');
+        }
+
+        return $summary;
     }
 
     /**

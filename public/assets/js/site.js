@@ -1,7 +1,7 @@
 /*
  * Améliorations progressives de bytechnum.com.
- * La page fonctionne sans ce script : il replie le menu sur petit écran,
- * compte les caractères du message et empêche un double envoi du formulaire.
+ * La page fonctionne sans ce script : il replie le menu sur petit écran, présente les produits
+ * en onglets, compte les caractères du message et empêche un double envoi du formulaire.
  */
 (function () {
   'use strict';
@@ -81,8 +81,103 @@
     });
   }
 
+  function setUpProductTabs() {
+    const tablist = document.querySelector('.product-tabs');
+    if (!tablist) {
+      return;
+    }
+
+    const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+    const panels = tabs.map((tab) =>
+      document.getElementById(tab.getAttribute('aria-controls') || ''),
+    );
+    if (tabs.length === 0 || panels.some((panel) => !panel)) {
+      return;
+    }
+
+    panels.forEach((panel, index) => {
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', tabs[index].id);
+      panel.tabIndex = 0;
+    });
+
+    const select = (index, moveFocus) => {
+      tabs.forEach((tab, position) => {
+        const isSelected = position === index;
+        tab.setAttribute('aria-selected', String(isSelected));
+        tab.tabIndex = isSelected ? 0 : -1;
+        panels[position].hidden = !isSelected;
+      });
+      if (moveFocus) {
+        tabs[index].focus();
+      }
+    };
+
+    const indexOfHash = (hash) => panels.findIndex((panel) => `#${panel.id}` === hash);
+
+    const reveal = (index) => {
+      select(index, false);
+      // Sur petit écran, la liste défile à l'horizontale : l'onglet choisi y revient en vue.
+      tablist.scrollLeft = tabs[index].offsetLeft - tabs[0].offsetLeft;
+      tablist.scrollIntoView({ block: 'start' });
+    };
+
+    tablist.hidden = false;
+    select(0, false);
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index, false));
+    });
+
+    tablist.addEventListener('keydown', (event) => {
+      const current = tabs.indexOf(document.activeElement);
+      if (current === -1) {
+        return;
+      }
+      const last = tabs.length - 1;
+      const targets = {
+        ArrowRight: current === last ? 0 : current + 1,
+        ArrowLeft: current === 0 ? last : current - 1,
+        Home: 0,
+        End: last,
+      };
+      const target = targets[event.key];
+      if (target === undefined) {
+        return;
+      }
+      event.preventDefault();
+      select(target, true);
+    });
+
+    document.addEventListener('click', (event) => {
+      const link =
+        event.target instanceof Element ? event.target.closest('a[href^="#produit-"]') : null;
+      const index = link ? indexOfHash(link.getAttribute('href')) : -1;
+      if (index === -1) {
+        return;
+      }
+      event.preventDefault();
+      window.history.pushState(null, '', link.getAttribute('href'));
+      reveal(index);
+      tabs[index].focus({ preventScroll: true });
+    });
+
+    window.addEventListener('hashchange', () => {
+      const index = indexOfHash(window.location.hash);
+      if (index !== -1) {
+        reveal(index);
+      }
+    });
+
+    const initial = indexOfHash(window.location.hash);
+    if (initial !== -1) {
+      reveal(initial);
+    }
+  }
+
   function init() {
     setUpMenu();
+    setUpProductTabs();
     setUpMessageCounter();
     setUpSubmitLock();
   }
