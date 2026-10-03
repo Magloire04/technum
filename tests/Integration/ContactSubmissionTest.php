@@ -137,12 +137,12 @@ final class ContactSubmissionTest extends ApplicationTestCase
         self::assertSame([], $this->mailer->sent);
     }
 
-    public function testExpiredFormCanBeSentAgainWithItsNewToken(): void
+    public function testExpiredFormCanBeSentAgainRightAway(): void
     {
         $first = $this->post('/contact', $this->validForm(7201));
         $token = Html::parse($first->body)->attribute('input[name="token"]', 'value');
 
-        $this->clock->advance(5);
+        $this->clock->advance(1);
         $response = $this->post('/contact', [...$this->validForm(), 'token' => $token]);
 
         self::assertSame(303, $response->status);
