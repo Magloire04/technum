@@ -972,6 +972,12 @@ main:focus {
   margin-top: 0;
 }
 
+/* Le navigateur défile lui-même vers le panneau visé par l'ancre : la marge garde la liste d'onglets
+   visible au-dessus de lui (hauteur d'un onglet et écart, avec un peu de jeu). */
+.js .products > .product {
+  scroll-margin-top: 7.5rem;
+}
+
 .product:focus-visible {
   outline-offset: 6px;
 }
