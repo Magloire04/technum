@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Dotenv\Dotenv;
 use Technum\Application;
 use Technum\Config;
 use Technum\Http\Request;
@@ -16,7 +15,7 @@ ini_set('log_errors', '1');
 ini_set('error_log', $rootDir . '/storage/logs/php-errors.log');
 
 try {
-    $config = Config::fromArray(Dotenv::createArrayBacked($rootDir)->load());
+    $config = Config::fromEnvFile($rootDir);
     $application = Application::create($rootDir, $config);
     $request = Request::fromGlobals($_SERVER, $_GET, $_POST, $config->clientIpHeader);
     $application->handle($request)->send();
