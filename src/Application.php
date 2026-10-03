@@ -14,6 +14,7 @@ use Technum\Content\ContentRepository;
 use Technum\Controller\ContactController;
 use Technum\Controller\ErrorController;
 use Technum\Controller\HomeController;
+use Technum\Controller\LegalController;
 use Technum\Http\Request;
 use Technum\Http\Response;
 use Technum\Http\Router;
@@ -76,6 +77,10 @@ final class Application
         $router->get('/', $home->show(...));
         $router->get('/contact', static fn (Request $request): Response => Response::redirect('/#contact', 301));
         $router->post('/contact', $contact->submit(...));
+        $legal = new LegalController($view);
+        foreach (LegalController::pages() as $page) {
+            $router->get('/' . $page, static fn (Request $request): Response => $legal->show($page));
+        }
 
         return new self($router, $config->isProduction());
     }

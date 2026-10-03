@@ -33,6 +33,7 @@ final class HomePage
             'title' => self::TITLE,
             'description' => self::DESCRIPTION,
             'path' => '/',
+            'jsonLd' => StructuredData::organization($this->content->site()),
         ]);
     }
 }
