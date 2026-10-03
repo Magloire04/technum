@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Technum;
 
+use Dotenv\Dotenv;
+use Dotenv\Exception\ExceptionInterface as DotenvException;
+
 /**
  * Configuration lue dans .env et validée au démarrage. Aucun message d'erreur ne contient de secret.
  */
@@ -23,6 +26,24 @@ final class Config
         public readonly string $contactRecipientEmail,
         public readonly string $clientIpHeader,
     ) {
+    }
+
+    /**
+     * Lit le fichier .env du dossier. En cas d'erreur de syntaxe, le message de phpdotenv cite la valeur
+     * en cause, parfois un mot de passe : il n'est jamais repris, seule sa classe l'est.
+     */
+    public static function fromEnvFile(string $directory): self
+    {
+        try {
+            $values = Dotenv::createArrayBacked($directory)->load();
+        } catch (DotenvException $exception) {
+            throw new ConfigException(sprintf(
+                'Fichier .env illisible (%s) : vérifier les guillemets des valeurs.',
+                $exception::class,
+            ));
+        }
+
+        return self::fromArray($values);
     }
 
     /**
