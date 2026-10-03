@@ -117,6 +117,8 @@
 
     const reveal = (index) => {
       select(index, false);
+      // Sur petit écran, la liste défile à l'horizontale : l'onglet choisi y revient en vue.
+      tablist.scrollLeft = tabs[index].offsetLeft - tabs[0].offsetLeft;
       tablist.scrollIntoView({ block: 'start' });
     };
 
