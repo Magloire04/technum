@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-// Produits ouverts au public. « next » vide : le bloc affiche « Version stable, maintenue. ».
+// Produits de TECHNUM. « next » vide : le bloc affiche « Version stable, maintenue. ».
+// « url » vide : aucun accès public, la page n'affiche ni lien ni adresse pour ce produit.
 // « srcSmall » désigne la même capture en largeur moitié, ou reste vide.
 return [
     [
@@ -48,13 +49,13 @@ return [
     [
         'slug' => 'provia',
         'name' => 'PROVIA',
-        'url' => 'https://provia.bytechnum.com',
+        'url' => '',
         'tagline' => 'Mettre en relation les étudiants béninois et les entreprises qui cherchent des stagiaires.',
         'audience' => 'Étudiants, recruteurs et établissements.',
         'stage' => 'beta',
         'done' => 'Profils étudiants et recruteurs, publication et consultation des offres, candidature en ligne.',
         'next' => 'Ouverture complète des inscriptions, espace étudiant complet, espace recruteur, suivi par les établissements, puis calcul de compatibilité entre profils et offres.',
-        'note' => '',
+        'note' => "PROVIA est en cours de développement : son accès n'est pas encore ouvert.",
         'icon' => 'img/produits/provia-icone.svg',
         'image' => [
             'src' => 'img/produits/provia-1280.webp',

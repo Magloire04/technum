@@ -27,7 +27,7 @@
     <div class="section__aside">
       <div class="section__label">
         <h2 class="section__title" id="titre-produits">Nos produits</h2>
-        <p class="section__context">Quatre outils conçus, hébergés et maintenus par TECHNUM, ouverts au public.</p>
+        <p class="section__context">Quatre outils conçus, hébergés et maintenus par TECHNUM.</p>
       </div>
     </div>
     <div class="section__body">
@@ -43,7 +43,7 @@
     <div class="section__aside">
       <div class="section__label">
         <h2 class="section__title" id="titre-realisations">Autres réalisations</h2>
-        <p class="section__context">Des preuves de concept, un produit en pause et des mandats clients.</p>
+        <p class="section__context">Des preuves de concept, un produit en pause et un mandat client.</p>
       </div>
     </div>
     <div class="section__body">
@@ -122,20 +122,6 @@
         </li>
       </ol>
       <p class="commitments">Vos données personnelles sont traitées selon la loi n°2017-20. Chaque modification du code passe par des tests automatiques. La documentation vous est remise à la livraison.</p>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="a-propos" aria-labelledby="titre-a-propos">
-  <div class="section__inner">
-    <div class="section__aside">
-      <div class="section__label">
-        <h2 class="section__title" id="titre-a-propos">Qui est derrière TECHNUM</h2>
-      </div>
-    </div>
-    <div class="section__body">
-      <p class="about__text">TECHNUM est basée à Porto-Novo. Elle a été fondée par Elisée Magloire ATONDE, développeur logiciel et DevSecOps, spécialisé dans la confiance numérique&nbsp;: signatures électroniques, certificats vérifiables et protection des données.</p>
-      <a class="about__link" href="https://moi.bytechnum.com">Voir le parcours du fondateur</a>
     </div>
   </div>
 </section>

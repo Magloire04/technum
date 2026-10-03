@@ -54,14 +54,16 @@ final class HomePageTest extends TestCase
         self::assertSame(4, $this->html->count('.product'));
         self::assertSame('Bêta', $this->html->text('#produit-provia [aria-current="step"]'));
         self::assertSame('Version stable, maintenue.', $this->html->text('#produit-oeil360-finance .product__facts div:nth-child(2) dd'));
-        self::assertSame('https://provia.bytechnum.com/?ref=bytechnum', $this->html->attribute('#produit-provia .product__action', 'href'));
+        self::assertSame('https://oeil360finance.bytechnum.com/?ref=bytechnum', $this->html->attribute('#produit-oeil360-finance .product__action', 'href'));
         self::assertStringContainsString('données de démonstration', $this->html->text('#produit-carte-uac .product__note'));
     }
 
     public function testProjectsServicesAndStepsAreListed(): void
     {
-        self::assertSame(6, $this->html->count('.project'));
-        self::assertSame(0, $this->html->count('#realisation-bescat a'));
+        self::assertSame(['TraçaCajou', 'Après mon bac', 'Identité numérique pour le CDPI', 'e-pensionbj'], $this->html->texts('.project__name'));
+        self::assertStringNotContainsString('BESCAT', $this->source);
+        self::assertStringNotContainsString('CYPASS', $this->source);
+        self::assertStringContainsString('un produit en pause et un mandat client', $this->html->text('#realisations .section__context'));
         self::assertSame(5, $this->html->count('.service'));
         self::assertSame(5, $this->html->count('.step'));
         self::assertStringContainsString('PROVIA et Carte UAC', $this->html->text('.service:nth-child(2) .service__examples'));
@@ -71,19 +73,39 @@ final class HomePageTest extends TestCase
     {
         self::assertStringStartsWith('https://wa.me/2290150617300?text=', $this->html->attribute('.contact-direct__action', 'href'));
         self::assertContains('tel:+2290150617300', $this->html->attributes('.contact-direct a', 'href'));
-        self::assertContains('mailto:elisee.atonde@bytechnum.com', $this->html->attributes('.contact-direct a', 'href'));
+        self::assertContains('mailto:technum.services@bytechnum.com', $this->html->attributes('.contact-direct a', 'href'));
     }
 
     public function testDirectContactEmailCanOnlyWrapBeforeTheAtSign(): void
     {
-        self::assertStringContainsString('>elisee.atonde<wbr>@bytechnum.com</a>', $this->source);
+        self::assertStringContainsString('>technum.services<wbr>@bytechnum.com</a>', $this->source);
     }
 
     public function testFooterEmailCanOnlyWrapBeforeTheAtSign(): void
     {
         $link = $this->html->elements('.site-footer a[href^="mailto:"]')[0];
 
-        self::assertSame('elisee.atonde<wbr>@bytechnum.com', $link->innerHTML);
+        self::assertSame('technum.services<wbr>@bytechnum.com', $link->innerHTML);
+    }
+
+    public function testPersonalAddressIsNoLongerShown(): void
+    {
+        self::assertStringNotContainsString('elisee.atonde@', $this->source);
+    }
+
+    public function testProviaShowsNoAccessLinkOnlyThatItIsInProgress(): void
+    {
+        self::assertSame(0, $this->html->count('#produit-provia a'));
+        self::assertSame(0, $this->html->count('#produit-provia .product__host'));
+        self::assertStringContainsString('pas encore ouvert', $this->html->text('#produit-provia .product__note'));
+        self::assertStringNotContainsString('provia.bytechnum.com', $this->source);
+        self::assertStringNotContainsString('ouverts au public', $this->source);
+    }
+
+    public function testFounderSectionIsGone(): void
+    {
+        self::assertSame(0, $this->html->count('#a-propos'));
+        self::assertStringNotContainsString('Qui est derrière', $this->source);
     }
 
     public function testPageRespectsTheContentSecurityPolicy(): void
