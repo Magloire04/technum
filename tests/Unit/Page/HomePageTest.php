@@ -53,6 +53,23 @@ final class HomePageTest extends TestCase
         self::assertStringContainsString('Projet en cours', $this->html->text('.product-strip li:nth-child(3) .product-tile__summary'));
     }
 
+    public function testSectionsAlternateTheirBackgrounds(): void
+    {
+        self::assertSame(
+            ['section', 'section section--ice', 'section section--charcoal section--split', 'section section--blue', 'section section--contact'],
+            $this->html->attributes('main > .section', 'class'),
+        );
+    }
+
+    public function testEachSectionOpensWithItsTitle(): void
+    {
+        self::assertSame(
+            ['Nos produits', 'Autres réalisations', 'Ce que nous faisons pour vous', 'Comment se passe un projet', 'Parlons de votre projet'],
+            $this->html->texts('.section__head .section__title'),
+        );
+        self::assertSame(0, $this->html->count('.section__aside'));
+    }
+
     public function testMenuOffersTheContactOnSmallScreens(): void
     {
         self::assertSame('Parler de votre projet', $this->html->text('.site-nav__list .site-nav__contact a'));

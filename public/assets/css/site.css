@@ -810,36 +810,88 @@ main:focus {
   }
 }
 
-/* Sections : colonne de repère à gauche, séparée par le filet vertical du logo */
+/* Sections : un titre en tête, puis le contenu ; chaque section a son fond */
+
+.section {
+  padding: var(--space-8) 0;
+}
 
 .section__inner {
-  display: grid;
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
 
-.section__aside {
-  padding: var(--space-7) 0 var(--space-5);
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-7);
+  margin-bottom: var(--space-6);
 }
 
 .section__title {
-  font-size: var(--text-h2);
+  font-size: clamp(1.875rem, 1.45rem + 1.4vw, 2.5rem);
+  line-height: 1.1;
 }
 
 .section__context {
   max-width: 34rem;
-  margin-top: var(--space-3);
   color: var(--charcoal-soft);
 }
 
-.section__body {
-  min-width: 0;
-  padding-bottom: var(--space-7);
+.section--ice {
+  background: var(--ice);
 }
 
-.section--contact {
-  background: var(--off-white);
+.section--charcoal {
+  background: var(--charcoal);
+  color: var(--white);
+}
+
+.section--blue {
+  background: var(--blue-dark);
+  color: var(--white);
+}
+
+.section--charcoal .section__context {
+  color: var(--on-charcoal);
+}
+
+.section--blue .section__context {
+  color: var(--on-blue);
+}
+
+.section--charcoal :focus-visible,
+.section--blue :focus-visible {
+  outline-color: var(--white);
+}
+
+@media (min-width: 60rem) {
+  .section {
+    padding: var(--space-9) 0;
+  }
+
+  .section__head {
+    margin-bottom: var(--space-7);
+  }
+
+  .section--split .section__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    align-items: start;
+    column-gap: var(--space-8);
+  }
+
+  .section--split .section__head {
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .section--split .section__context {
+    margin-top: var(--space-4);
+  }
 }
 
 /* Produits */
@@ -1226,24 +1278,6 @@ main:focus {
   .site-nav__toggle,
   .js .site-nav__toggle {
     display: none;
-  }
-
-  .section__inner {
-    grid-template-columns: 18rem minmax(0, 1fr);
-  }
-
-  .section__aside {
-    padding: var(--space-8) var(--space-6) var(--space-8) 0;
-    border-right: 1px solid var(--line);
-  }
-
-  .section__label {
-    position: sticky;
-    top: calc(var(--header-height) + var(--space-6));
-  }
-
-  .section__body {
-    padding: var(--space-8) 0 var(--space-8) var(--space-7);
   }
 
   .product {
