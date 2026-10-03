@@ -10,6 +10,9 @@ DirectoryIndex index.php
     RewriteCond %{HTTP_HOST} ^www\.bytechnum\.com$ [NC]
     RewriteRule ^ https://bytechnum.com%{REQUEST_URI} [R=301,L]
 
+    # Un journal d'erreurs laissé par le serveur dans ce dossier n'est jamais servi.
+    RewriteRule (^|/)error_log$ - [F,L]
+
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 

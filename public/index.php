@@ -8,11 +8,12 @@ use Technum\Http\Request;
 
 $rootDir = dirname(__DIR__);
 
-require $rootDir . '/vendor/autoload.php';
-
+// Avant les dépendances : une erreur à leur chargement doit aussi finir dans storage/logs.
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 ini_set('error_log', $rootDir . '/storage/logs/php-errors.log');
+
+require $rootDir . '/vendor/autoload.php';
 
 try {
     $config = Config::fromEnvFile($rootDir);

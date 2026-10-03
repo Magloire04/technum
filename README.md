@@ -29,6 +29,17 @@ Les coordonnées, les produits, les réalisations et les services vivent dans `c
 
 Depuis `main` uniquement, sur le serveur : `cd ~/apps/technum && bash deploy.sh`. Le fichier `.env` du serveur n'est jamais commité. Le détail de l'architecture de déploiement est dans la spécification, section 9.
 
+## Entretien et alertes
+
+Sur le serveur, cron lance `tools/entretien.php` toutes les quinze minutes. Le script efface les empreintes d'adresse IP de plus d'une heure, fait tourner le journal d'erreurs PHP au-delà de 1 Mo et signale les demandes du formulaire qui n'ont pas pu partir. Il n'écrit rien quand tout va bien : cron envoie toute sortie par e-mail à l'adresse de `MAILTO`, ce qui sert d'alerte.
+
+```
+MAILTO="elisee.atonde@bytechnum.com"
+*/15 * * * * /usr/local/bin/php /home/<compte>/apps/technum/tools/entretien.php
+```
+
+Les journaux sont dans `storage/logs` : `php-errors.log` pour les erreurs PHP, `security.log` pour les refus du formulaire, sans donnée personnelle.
+
 ## Documents
 
 - Conception : [docs/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/specs/2026-10-02-page-accueil-bytechnum-design.md)

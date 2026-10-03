@@ -36,6 +36,14 @@ final class HomeRouteTest extends ApplicationTestCase
         self::assertSame('/#contact', $response->header('Location'));
     }
 
+    public function testOldComingSoonAddressRedirectsToTheHomePage(): void
+    {
+        $response = $this->get('/index.html');
+
+        self::assertSame(301, $response->status);
+        self::assertSame('/', $response->header('Location'));
+    }
+
     public function testUnknownPageIsANotFoundPageThatIsNotIndexed(): void
     {
         $response = $this->get('/page-inconnue');
