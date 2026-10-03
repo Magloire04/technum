@@ -1,14 +1,12 @@
 # Page d'accueil de bytechnum.com : plan d'implémentation
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Objectif :** remplacer la page « Bientôt en ligne » de bytechnum.com par la page d'accueil de la marque TECHNUM : promesse, produits en service avec leur état, autres réalisations, services, méthode, fondateur et contact par formulaire, WhatsApp, téléphone ou e-mail.
 
 **Architecture :** site PHP 8.4 sans framework. Un point d'entrée unique (`public/index.php`) passe chaque requête à un petit routeur, les contrôleurs rendent des gabarits PHP, le contenu éditorial vit dans des fichiers PHP versionnés (`content/`). Aucune base de données, aucun cookie, aucune ressource tierce. Le front tient dans une feuille CSS et un script écrits à la main.
 
 **Pile technique :** PHP 8.4, Composer, PHPMailer, phpdotenv, PHPUnit, PHPStan, PHP CS Fixer, ESLint, Prettier, GitHub Actions, hébergement mutualisé Spaceship (LiteSpeed).
 
-**Spec :** `docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md`
+**Spec :** `docs/specs/2026-10-02-page-accueil-bytechnum-design.md`
 
 ## Contraintes globales
 
@@ -21,7 +19,7 @@
 - Coordonnées : `+229 01 50 61 73 00` (lien `tel:+2290150617300`), WhatsApp `https://wa.me/2290150617300`, `elisee.atonde@bytechnum.com`, `https://github.com/Magloire04`, « Porto-Novo, Bénin ».
 - Sécurité : toute valeur affichée passe par `e()`. Content-Security-Policy stricte, donc aucun script en ligne, aucune balise `<style>` et aucun attribut `style` dans les gabarits. Secrets uniquement dans `.env`, jamais commité.
 - Captures : uniquement des captures réelles des produits.
-- Git : Gitflow (`main`, `develop`, branches `feature/TECHNUM-{issue}-{description}`), Conventional Commits en minuscules de 72 caractères au plus, messages passés par `git commit -F -` avec un heredoc, aucune mention d'outil d'IA, aucun trailer de co-auteur.
+- Git : Gitflow (`main`, `develop`, branches `feature/TECHNUM-{issue}-{description}`), Conventional Commits en minuscules de 72 caractères au plus, messages passés par `git commit -F -` avec un heredoc, aucun trailer de co-auteur.
 - Mise en ligne et toute écriture sur le serveur : uniquement sur accord explicite d'Elisée, au moment de le faire. Ne jamais lire de fichier de secrets de production.
 - Toute tâche qui touche l'interface se termine par une vérification dans un vrai navigateur, sur ordinateur et sur téléphone.
 
@@ -37,6 +35,7 @@
 
 - Dossier du dépôt : `c:/wamp64/www/TECHNUM`. Chaque bloc de commandes commence par `cd /c/wamp64/www/TECHNUM`.
 - Les commandes PHP utilisent `PHP84=/c/wamp64/bin/php/php8.4.15/php.exe`, à redéfinir dans chaque bloc, car l'état du shell ne persiste pas.
+- Les outils ponctuels et la commande SSH du serveur vivent dans un dossier local hors du dépôt, désigné par la variable `TECHNUM_OUTILS`, à définir avant chaque bloc qui l'utilise.
 - Vérification complète avant chaque pull request :
 
 ```bash
@@ -48,7 +47,7 @@ PHP84=/c/wamp64/bin/php/php8.4.15/php.exe
 ```
 
 - À partir du lot 4, ajouter `npm run lint:js` et `npm run format:check`.
-- Les captures du navigateur sont enregistrées dans `c:\wamp64\www\TECHNUM\.playwright-mcp\`, dossier exclu de Git par `.git/info/exclude`. Le supprimer à la fin de chaque tâche qui l'utilise.
+- Les captures du navigateur sont enregistrées dans `c:\wamp64\www\TECHNUM\.captures\`, dossier exclu de Git par `.git/info/exclude`. Le supprimer à la fin de chaque tâche qui l'utilise.
 - Serveur local : `"$PHP84" -S 127.0.0.1:8080 -t public tools/dev-router.php`, lancé en arrière-plan, arrêté à la fin de la tâche.
 - Les numéros d'issue sont attribués par GitHub au moment de la création. Chaque lot crée son issue, garde son numéro dans `.git/TECHNUM_ISSUE` et l'utilise pour la branche et la pull request.
 - Fusion d'une pull request : seulement quand l'intégration continue est verte, avec `gh pr merge --merge --delete-branch`, conformément à l'écart « contributeur unique » documenté dans `CONTRIBUTING.md`.
@@ -112,8 +111,8 @@ Le site présente ce que fait TECHNUM, les produits en service et leur état, le
 
 ## Documents
 
-- Conception : [docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md)
-- Plan de réalisation : [docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md](docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md)
+- Conception : [docs/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/specs/2026-10-02-page-accueil-bytechnum-design.md)
+- Plan de réalisation : [docs/plans/2026-10-02-page-accueil-bytechnum.md](docs/plans/2026-10-02-page-accueil-bytechnum.md)
 - Règles de contribution : [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Pile
@@ -201,7 +200,7 @@ Contexte et issue liée : #
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-git add README.md CONTRIBUTING.md .github/pull_request_template.md docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md
+git add README.md CONTRIBUTING.md .github/pull_request_template.md docs/plans/2026-10-02-page-accueil-bytechnum.md
 git commit -F - <<'EOF'
 docs: ajoute les règles de contribution et le plan de réalisation
 EOF
@@ -1653,7 +1652,7 @@ git checkout -b "feature/TECHNUM-$ISSUE-ressources-contenu"
 echo "$ISSUE" | tee .git/TECHNUM_ISSUE
 ```
 
-Les scripts Python de ce lot sont des outils ponctuels. Ils vivent hors du dépôt, dans `/c/Users/jenmf/AppData/Local/Temp/technum-outils`, seuls leurs résultats sont commités.
+Les scripts Python de ce lot sont des outils ponctuels. Ils vivent hors du dépôt, dans le dossier local `$TECHNUM_OUTILS`, seuls leurs résultats sont commités.
 
 ### Tâche 7 : logos et icônes
 
@@ -1670,7 +1669,7 @@ Le SVG fourni (`documentations/TECHNUM-LOGO.svg`) est le logo complet en noir. I
 - [ ] **Étape 1 : préparer les outils Python**
 
 ```bash
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
+TOOLS="$TECHNUM_OUTILS"
 mkdir -p "$TOOLS"
 python -m pip install --quiet --target "$TOOLS/pylib" svgelements pillow pymupdf
 ```
@@ -1819,7 +1818,7 @@ if __name__ == "__main__":
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
+TOOLS="$TECHNUM_OUTILS"
 PYTHONPATH="$TOOLS/pylib" PYTHONIOENCODING=utf-8 python "$TOOLS/build_logos.py" documentations/TECHNUM-LOGO.svg public/assets/img
 PYTHONPATH="$TOOLS/pylib" PYTHONIOENCODING=utf-8 python "$TOOLS/build_icons.py" public
 ls -la public/assets/img public/favicon.ico public/apple-touch-icon.png
@@ -1836,7 +1835,7 @@ curl -fsSL -A "Mozilla/5.0" -o public/assets/img/produits/oeil360-finance-icone.
 curl -fsSL -A "Mozilla/5.0" -o public/assets/img/produits/dis-oui-icone.svg https://disoui.bytechnum.com/favicon.svg
 curl -fsSL -A "Mozilla/5.0" -o public/assets/img/produits/provia-icone.svg https://provia.bytechnum.com/favicon.svg
 curl -fsSL -A "Mozilla/5.0" -o public/assets/img/produits/carte-uac-icone.svg https://uacmap.bytechnum.com/icon.svg
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
+TOOLS="$TECHNUM_OUTILS"
 PYTHONPATH="$TOOLS/pylib" python -c "from PIL import Image; p='public/assets/img/produits/oeil360-finance-icone.png'; i=Image.open(p).convert('RGBA'); i.thumbnail((56, 56), Image.LANCZOS); i.save(p, optimize=True); print(i.size)"
 grep -l -i -E '<script|on[a-z]+=' public/assets/img/produits/*.svg public/assets/img/*.svg || echo "aucun script dans les SVG"
 ```
@@ -1849,7 +1848,7 @@ Préparer une page d'aperçu hors du dépôt :
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
+TOOLS="$TECHNUM_OUTILS"
 mkdir -p "$TOOLS/apercu"
 cp public/assets/img/*.svg "$TOOLS/apercu/"
 cp "documentations/TECHNUM LOGO.png" "$TOOLS/apercu/officiel.png"
@@ -1865,7 +1864,7 @@ cat > "$TOOLS/apercu/index.html" <<'EOF'
 EOF
 ```
 
-Lancer en arrière-plan `php -S 127.0.0.1:8765 -t /c/Users/jenmf/AppData/Local/Temp/technum-outils/apercu`, puis avec les outils Playwright : `browser_resize` 1200 × 700, `browser_navigate` vers `http://127.0.0.1:8765/index.html`, `browser_take_screenshot` vers `c:\wamp64\www\TECHNUM\.playwright-mcp\logos.png`, et lire l'image.
+Lancer en arrière-plan `php -S 127.0.0.1:8765 -t "$TECHNUM_OUTILS/apercu"`, puis, dans un navigateur piloté par Playwright : fenêtre de 1200 × 700, ouvrir `http://127.0.0.1:8765/index.html`, capturer l'écran vers `c:\wamp64\www\TECHNUM\.captures\logos.png`, et lire l'image.
 
 Attendu : sur chaque version, la jambe gauche et la barre du H suivent la couleur de TECH, la jambe droite du H et NUM sont bleues, comme sur le PNG officiel en bas de page. La version claire reste lisible sur fond Charcoal et l'accolade du favicon se reconnaît à 32 px. Arrêter ensuite le serveur et fermer le navigateur.
 
@@ -1873,7 +1872,7 @@ Attendu : sur chaque version, la jambe gauche et la barre du H suivent la couleu
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-rm -rf .playwright-mcp
+rm -rf .captures
 git add public/assets/img public/favicon.ico public/apple-touch-icon.png
 git commit -F - <<'EOF'
 feat(assets): ajoute les déclinaisons du logo et les icônes des produits
@@ -1909,11 +1908,11 @@ Attendu : chaque fichier woff2 commence par `wOF2`, entre 7 et 20 Ko chacun.
 
 - [ ] **Étape 2 : capturer PROVIA**
 
-Avec les outils Playwright : `browser_resize` 1280 × 800, `browser_navigate` vers `https://provia.bytechnum.com/`, `browser_wait_for` 2 secondes, `browser_take_screenshot` avec `scale` à `css` vers `c:\wamp64\www\TECHNUM\.playwright-mcp\provia.png`.
+Dans un navigateur piloté par Playwright : fenêtre de 1280 × 800, ouvrir `https://provia.bytechnum.com/`, attendre 2 secondes, capturer l'écran à l'échelle CSS vers `c:\wamp64\www\TECHNUM\.captures\provia.png`.
 
 - [ ] **Étape 3 : capturer la démonstration d'Oeil 360° Finance**
 
-La page d'accueil d'Oeil 360° Finance contient une démonstration qui tourne dans le navigateur, sans toucher aux données réelles. `browser_navigate` vers `https://oeil360finance.bytechnum.com/`, puis `browser_snapshot` pour repérer, dans la section « Essayez maintenant », les champs « Montant (XOF) », « Sens », « Catégorie » et le bouton « Ajouter ». Ajouter quatre entrées fictives dans cet ordre :
+La page d'accueil d'Oeil 360° Finance contient une démonstration qui tourne dans le navigateur, sans toucher aux données réelles. Ouvrir `https://oeil360finance.bytechnum.com/`, puis repérer, dans la section « Essayez maintenant », les champs « Montant (XOF) », « Sens », « Catégorie » et le bouton « Ajouter ». Ajouter quatre entrées fictives dans cet ordre :
 
 | Montant | Sens | Catégorie |
 | --- | --- | --- |
@@ -1922,7 +1921,7 @@ La page d'accueil d'Oeil 360° Finance contient une démonstration qui tourne da
 | 30000 | Dépense (sortie) | Transport |
 | 25000 | Dépense (sortie) | Loisirs |
 
-Placer ensuite la section en haut de l'écran avec `browser_evaluate` :
+Placer ensuite la section en haut de l'écran en exécutant dans la page :
 
 ```js
 () => {
@@ -1936,17 +1935,17 @@ Placer ensuite la section en haut de l'écran avec `browser_evaluate` :
 }
 ```
 
-Attendu : `true`. `browser_take_screenshot` vers `c:\wamp64\www\TECHNUM\.playwright-mcp\oeil360.png`, puis lire l'image : le solde fictif, la répartition des dépenses et les dernières entrées doivent être visibles. Si une partie déborde, ajuster le défilement avec `window.scrollBy` et reprendre la capture.
+Attendu : `true`. Capturer l'écran vers `c:\wamp64\www\TECHNUM\.captures\oeil360.png`, puis lire l'image : le solde fictif, la répartition des dépenses et les dernières entrées doivent être visibles. Si une partie déborde, ajuster le défilement avec `window.scrollBy` et reprendre la capture.
 
 - [ ] **Étape 4 : capturer la Carte UAC sur téléphone**
 
-`browser_resize` 390 × 844, `browser_navigate` vers `https://uacmap.bytechnum.com/`, `browser_wait_for` 5 secondes pour le fond de carte, `browser_take_screenshot` vers `c:\wamp64\www\TECHNUM\.playwright-mcp\carte-uac.png`, puis `browser_close`.
+Fenêtre de 390 × 844, ouvrir `https://uacmap.bytechnum.com/`, attendre 5 secondes pour le fond de carte, capturer l'écran vers `c:\wamp64\www\TECHNUM\.captures\carte-uac.png`, puis fermer le navigateur.
 
 - [ ] **Étape 5 : reprendre la capture réelle de Dis oui**
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-cp /c/wamp64/www/dis-oui/docs/images/theme-bytechnum.png .playwright-mcp/dis-oui.png
+cp /c/wamp64/www/dis-oui/docs/images/theme-bytechnum.png .captures/dis-oui.png
 ```
 
 Cette capture vient du dépôt du produit : l'invitation au thème TECHNUM, sur téléphone. Créer une vraie invitation en production pour la capturer écrirait dans la base de Dis oui, ce qui est exclu.
@@ -1956,7 +1955,7 @@ Cette capture vient du dépôt du produit : l'invitation au thème TECHNUM, sur 
 ```python
 """Convertit les captures des produits en WebP aux tailles attendues par le site.
 
-Usage : python build_screenshots.py .playwright-mcp public/assets/img/produits
+Usage : python build_screenshots.py .captures public/assets/img/produits
 """
 import sys
 from pathlib import Path
@@ -1991,15 +1990,15 @@ if __name__ == "__main__":
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
-PYTHONPATH="$TOOLS/pylib" PYTHONIOENCODING=utf-8 python "$TOOLS/build_screenshots.py" .playwright-mcp public/assets/img/produits
+TOOLS="$TECHNUM_OUTILS"
+PYTHONPATH="$TOOLS/pylib" PYTHONIOENCODING=utf-8 python "$TOOLS/build_screenshots.py" .captures public/assets/img/produits
 ```
 
 Attendu : six fichiers WebP aux tailles listées, chacun sous 200 Ko. Lire chaque fichier `-1280`, `-390` et `-420` pour confirmer qu'il montre le bon produit sans bandeau parasite.
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-rm -rf .playwright-mcp
+rm -rf .captures
 git add public/assets/fonts public/assets/img/produits
 git commit -F - <<'EOF'
 feat(assets): ajoute les polices et les captures réelles des produits
@@ -6140,11 +6139,11 @@ cd /c/wamp64/www/TECHNUM
 
 - [ ] **Étape 2 : capturer la page sur trois largeurs**
 
-Avec les outils Playwright, pour chaque largeur 1440 × 900, 820 × 1180 et 390 × 844 : `browser_resize`, `browser_navigate` vers `http://127.0.0.1:8080/`, `browser_take_screenshot` avec `fullPage` à `true` vers `c:\wamp64\www\TECHNUM\.playwright-mcp\accueil-<largeur>.png`. Lire chaque image.
+Dans un navigateur piloté par Playwright, pour chaque largeur 1440 × 900, 820 × 1180 et 390 × 844 : régler la fenêtre, ouvrir `http://127.0.0.1:8080/`, capturer la page entière vers `c:\wamp64\www\TECHNUM\.captures\accueil-<largeur>.png`. Lire chaque image.
 
 - [ ] **Étape 3 : mesurer ce qui se mesure**
 
-Sur chaque largeur, `browser_evaluate` :
+Sur chaque largeur, exécuter dans la page :
 
 ```js
 () => ({
@@ -6157,7 +6156,7 @@ Sur chaque largeur, `browser_evaluate` :
 })
 ```
 
-Attendu : `horizontalScroll` à `false`, polices prêtes, largeur du logo d'au moins 120, classe `js` présente. Puis `browser_console_messages` : aucune erreur.
+Attendu : `horizontalScroll` à `false`, polices prêtes, largeur du logo d'au moins 120, classe `js` présente. Puis lire la console : aucune erreur.
 
 - [ ] **Étape 4 : contrôler la liste de la spécification**
 
@@ -6171,16 +6170,16 @@ Cocher chaque point sur les captures :
 - [ ] Le menu « Menu » s'ouvre et se ferme sur téléphone, Échap le referme, un clic sur un lien le referme.
 - [ ] Le pied de page reste lisible : logo clair, liens blancs, contraste suffisant.
 
-Contrôler aussi le mouvement : recharger la page sur grand écran et regarder le registre se remplir une seule fois. Puis `browser_emulate_media` avec `reducedMotion` à `reduce`, recharger : les pistes s'affichent pleines, sans animation.
+Contrôler aussi le mouvement : recharger la page sur grand écran et regarder le registre se remplir une seule fois. Puis simuler la préférence « mouvement réduit » et recharger : les pistes s'affichent pleines, sans animation.
 
-Contrôler le clavier : sur grand écran, appuyer plusieurs fois sur Tab avec `browser_press_key`, puis capturer. Le lien « Aller au contenu » apparaît en premier, chaque élément actif montre un contour bleu.
+Contrôler le clavier : sur grand écran, appuyer plusieurs fois sur Tab, puis capturer. Le lien « Aller au contenu » apparaît en premier, chaque élément actif montre un contour bleu.
 
 - [ ] **Étape 4 bis : mesurer avec Lighthouse**
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-npx --yes lighthouse http://127.0.0.1:8080/ --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --chrome-flags="--headless=new" --output=json --output-path=.playwright-mcp/lighthouse.json --quiet
-node -e "const r=require('./.playwright-mcp/lighthouse.json'); for (const [k,v] of Object.entries(r.categories)) console.log(k, Math.round(v.score*100));"
+npx --yes lighthouse http://127.0.0.1:8080/ --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --chrome-flags="--headless=new" --output=json --output-path=.captures/lighthouse.json --quiet
+node -e "const r=require('./.captures/lighthouse.json'); for (const [k,v] of Object.entries(r.categories)) console.log(k, Math.round(v.score*100));"
 ```
 
 Attendu : au moins 95 sur les quatre axes. Si Chrome est introuvable, noter le point et le mesurer à la tâche 27 avec PageSpeed Insights.
@@ -6191,11 +6190,11 @@ Corriger dans `site.css` ou les gabarits chaque point non coché, puis reprendre
 
 - [ ] **Étape 6 : vérification complète, commit, pull request du lot**
 
-Arrêter le serveur local et supprimer `.playwright-mcp`.
+Arrêter le serveur local et supprimer `.captures`.
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-rm -rf .playwright-mcp
+rm -rf .captures
 PHP84=/c/wamp64/bin/php/php8.4.15/php.exe
 "$PHP84" vendor/bin/php-cs-fixer fix --dry-run --diff
 "$PHP84" vendor/bin/phpstan analyse --no-progress --memory-limit=512M
@@ -8613,9 +8612,9 @@ Lancer en arrière-plan `/c/wamp64/bin/php/php8.4.15/php.exe -S 127.0.0.1:8080 -
 
 Avec Playwright, en 1440 × 900 puis en 390 × 844 :
 
-1. `browser_navigate` vers `http://127.0.0.1:8080/#contact`, capture : formulaire vide, bouton WhatsApp à côté sur grand écran, en dessous sur téléphone.
+1. Ouvrir `http://127.0.0.1:8080/#contact`, capture : formulaire vide, bouton WhatsApp à côté sur grand écran, en dessous sur téléphone.
 2. Cliquer sur « Envoyer la demande » sans rien remplir, capture : message général en haut, une erreur sous chaque champ obligatoire, la page reste sur la section contact.
-3. Remplir nom, e-mail, besoin, un message d'au moins 20 caractères et cocher l'accord, attendre 4 secondes avec `browser_wait_for`, envoyer, capture : message « Demande envoyée. Nous vous répondons à l'adresse indiquée. ».
+3. Remplir nom, e-mail, besoin, un message d'au moins 20 caractères et cocher l'accord, attendre 4 secondes, envoyer, capture : message « Demande envoyée. Nous vous répondons à l'adresse indiquée. ».
 4. Vérifier que le compteur affiche le nombre de caractères pendant la saisie.
 
 ```bash
@@ -8624,13 +8623,13 @@ tail -n 12 storage/logs/mail-local.log
 rm -f storage/logs/mail-local.log storage/logs/security.log storage/rate-limit/*.hits
 ```
 
-Attendu : la demande de l'étape 3 apparaît dans le journal local, puis les fichiers locaux sont supprimés. Arrêter le serveur et supprimer `.playwright-mcp`.
+Attendu : la demande de l'étape 3 apparaît dans le journal local, puis les fichiers locaux sont supprimés. Arrêter le serveur et supprimer `.captures`.
 
 - [ ] **Étape 5 : vérification complète, commit, pull request du lot**
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-rm -rf .playwright-mcp
+rm -rf .captures
 PHP84=/c/wamp64/bin/php/php8.4.15/php.exe
 "$PHP84" vendor/bin/php-cs-fixer fix --dry-run --diff
 "$PHP84" vendor/bin/phpstan analyse --no-progress --memory-limit=512M
@@ -9357,12 +9356,12 @@ cat > public/og-source.html <<'EOF'
 EOF
 ```
 
-Lancer en arrière-plan `/c/wamp64/bin/php/php8.4.15/php.exe -S 127.0.0.1:8080 -t public tools/dev-router.php`. Avec Playwright : `browser_resize` 1200 × 630, `browser_navigate` vers `http://127.0.0.1:8080/og-source.html`, `browser_wait_for` 1 seconde, `browser_take_screenshot` avec `scale` à `css` vers `c:\wamp64\www\TECHNUM\public\assets\img\og-image.png`. Lire l'image : logo aux couleurs officielles en haut, phrase en Montserrat, bande Charcoal, bleu et bleu foncé en bas. Arrêter le serveur, puis :
+Lancer en arrière-plan `/c/wamp64/bin/php/php8.4.15/php.exe -S 127.0.0.1:8080 -t public tools/dev-router.php`. Avec Playwright : fenêtre de 1200 × 630, ouvrir `http://127.0.0.1:8080/og-source.html`, attendre 1 seconde, capturer l'écran à l'échelle CSS vers `c:\wamp64\www\TECHNUM\public\assets\img\og-image.png`. Lire l'image : logo aux couleurs officielles en haut, phrase en Montserrat, bande Charcoal, bleu et bleu foncé en bas. Arrêter le serveur, puis :
 
 ```bash
 cd /c/wamp64/www/TECHNUM
 rm public/og-source.html
-rm -rf .playwright-mcp
+rm -rf .captures
 git status --short public
 ```
 
@@ -9510,8 +9509,8 @@ Depuis `main` uniquement, sur le serveur : `cd ~/apps/technum && bash deploy.sh`
 
 ## Documents
 
-- Conception : [docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md)
-- Plan de réalisation : [docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md](docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md)
+- Conception : [docs/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/specs/2026-10-02-page-accueil-bytechnum-design.md)
+- Plan de réalisation : [docs/plans/2026-10-02-page-accueil-bytechnum.md](docs/plans/2026-10-02-page-accueil-bytechnum.md)
 - Règles de contribution : [CONTRIBUTING.md](CONTRIBUTING.md)
 ````
 
@@ -9558,7 +9557,7 @@ git checkout develop && git pull --ff-only
 
 - [ ] **Étape 4 : revue finale de toute la branche develop**
 
-Invoquer la compétence `superpowers:requesting-code-review` sur l'écart entre `main` et `develop`. Le relecteur reçoit la spécification, ce plan et la liste des points de vigilance. Corriger chaque constat bloquant dans une branche `bugfix/TECHNUM-{issue}-{description}` avec sa propre pull request, avant de continuer.
+Faire relire l'écart entre `main` et `develop` par un relecteur qui n'a pas écrit le code. Le relecteur reçoit la spécification, ce plan et la liste des points de vigilance. Corriger chaque constat bloquant dans une branche `bugfix/TECHNUM-{issue}-{description}` avec sa propre pull request, avant de continuer.
 
 - [ ] **Étape 5 : préparer la version 1 sur main**
 
@@ -9606,10 +9605,10 @@ La branche de version ne contient aucun commit propre : `develop` est déjà à 
 
 Chaque tâche de ce lot écrit sur le serveur de production. Avant chacune, demander l'accord explicite d'Elisée et attendre sa réponse. Ne jamais lire le fichier `.env` du serveur.
 
-Raccourci utilisé dans les commandes. La commande SSH du serveur, fournie par Elisée, reste hors du dépôt public : l'écrire une fois dans `/c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande`, sous la forme `ssh -o BatchMode=yes -i <clé> -p <port> <compte>@<serveur>`.
+Raccourci utilisé dans les commandes. La commande SSH du serveur, fournie par Elisée, reste hors du dépôt public : l'écrire une fois dans `$TECHNUM_OUTILS/ssh-commande`, sous la forme `ssh -o BatchMode=yes -i <clé> -p <port> <compte>@<serveur>`.
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 ```
 
 ### Tâche 25 : préparer le serveur
@@ -9621,8 +9620,8 @@ SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
 - [ ] **Étape 2 : créer la clé de déploiement et l'ajouter au dépôt, en lecture seule**
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
-TOOLS=/c/Users/jenmf/AppData/Local/Temp/technum-outils
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
+TOOLS="$TECHNUM_OUTILS"
 $SSH 'test -f ~/.ssh/technum_deploy || ssh-keygen -t ed25519 -N "" -C "technum-deploy" -f ~/.ssh/technum_deploy >/dev/null; cat ~/.ssh/technum_deploy.pub' > "$TOOLS/technum_deploy.pub"
 gh repo deploy-key add "$TOOLS/technum_deploy.pub" --repo Magloire04/technum --title "Serveur Spaceship bytechnum.com"
 ```
@@ -9632,7 +9631,7 @@ gh repo deploy-key add "$TOOLS/technum_deploy.pub" --repo Magloire04/technum --t
 Le serveur a déjà une entrée `Host github.com` pour un autre site. L'alias dédié évite d'utiliser la mauvaise clé.
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'grep -q "^Host github.com-technum$" ~/.ssh/config 2>/dev/null || printf "\nHost github.com-technum\n    HostName github.com\n    User git\n    IdentityFile ~/.ssh/technum_deploy\n    IdentitiesOnly yes\n" >> ~/.ssh/config; chmod 600 ~/.ssh/config; grep -n "^Host " ~/.ssh/config'
 ```
 
@@ -9641,7 +9640,7 @@ Attendu : la liste des hôtes contient `github.com-technum` en plus des entrées
 - [ ] **Étape 4 : cloner main et installer les dépendances**
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'cd ~/apps && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new" git clone -b main git@github.com-technum:Magloire04/technum.git technum && cd technum && composer install --no-dev --optimize-autoloader --no-interaction --no-progress && mkdir -p storage/logs storage/rate-limit && chmod 750 storage storage/logs storage/rate-limit && git log -1 --oneline'
 ```
 
@@ -9649,7 +9648,7 @@ Attendu : le dernier commit de `main` s'affiche.
 
 - [ ] **Étape 5 : Elisée crée le fichier `.env` du serveur**
 
-Elisée saisit lui-même les secrets, qui ne transitent jamais par l'assistant :
+Elisée saisit lui-même les secrets sur le serveur. Ils ne sont ni affichés ni recopiés ailleurs :
 
 Se connecter au serveur avec la commande SSH habituelle, puis :
 
@@ -9666,7 +9665,7 @@ Valeurs attendues dans `.env` : `APP_ENV=production`, `APP_SECRET` égal à la c
 - [ ] **Étape 6 : vérifier la configuration sans afficher de secret**
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'cd ~/apps/technum && php -r "require \"vendor/autoload.php\"; Technum\Config::fromArray(Dotenv\Dotenv::createArrayBacked(\".\")->load()); echo \"configuration valide\", PHP_EOL;"'
 ```
 
@@ -9679,7 +9678,7 @@ Attendu : `configuration valide`. Sinon, le message d'erreur nomme les variables
 - [ ] **Étape 2 : archiver la page « Bientôt en ligne » et basculer la racine web**
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'set -e; ts=$(date +%Y%m%d-%H%M%S); tar -czf ~/backups/bytechnum-bientot-$ts.tar.gz -C ~ bytechnum.com; mv ~/bytechnum.com ~/bytechnum.com.bientot; ln -s ~/apps/technum/public ~/bytechnum.com; ls -la ~ | grep bytechnum'
 ```
 
@@ -9688,7 +9687,7 @@ Attendu : `bytechnum.com -> /home/<compte>/apps/technum/public` et le dossier `b
 Retour arrière, en cas de problème non résolu :
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'rm ~/bytechnum.com && mv ~/bytechnum.com.bientot ~/bytechnum.com'
 ```
 
@@ -9710,7 +9709,7 @@ Attendu : 200, 200, 404, 200, 200, 200, 200. www et http répondent 301 vers `ht
 - [ ] **Étape 4 : vérifier l'adresse IP vue par le site**
 
 ```bash
-SSH="$(cat /c/Users/jenmf/AppData/Local/Temp/technum-outils/ssh-commande)"
+SSH="$(cat "$TECHNUM_OUTILS/ssh-commande")"
 $SSH 'cat > ~/apps/technum/public/ip-check-temporaire.php' <<'EOF'
 <?php
 header('Content-Type: text/plain');
@@ -9726,7 +9725,7 @@ Attendu : la dernière ligne affiche 404. Si la première ligne renvoyée par le
 
 - [ ] **Étape 5 : vérifier le site en production dans un navigateur**
 
-Avec Playwright, en 1440 × 900 puis en 390 × 844 : `browser_navigate` vers `https://bytechnum.com/`, capture pleine page, `browser_console_messages` sans erreur. Contrôler le logo, les polices, les captures, le registre animé, le menu sur téléphone et le pied de page.
+Avec Playwright, en 1440 × 900 puis en 390 × 844 : ouvrir `https://bytechnum.com/`, capture pleine page, console sans erreur. Contrôler le logo, les polices, les captures, le registre animé, le menu sur téléphone et le pied de page.
 
 - [ ] **Étape 6 : envoyer une vraie demande de test**
 
@@ -9736,7 +9735,7 @@ Remplir le formulaire en production avec le nom « Test de mise en ligne », une
 
 ```bash
 cd /c/wamp64/www/TECHNUM
-rm -rf .playwright-mcp
+rm -rf .captures
 ```
 
 Le dossier `~/bytechnum.com.bientot` reste en place quelques jours pour un retour arrière rapide. Le supprimer ensuite, avec l'accord d'Elisée : l'archive reste dans `~/backups`.
@@ -9745,7 +9744,7 @@ Le dossier `~/bytechnum.com.bientot` reste en place quelques jours pour un retou
 
 - [ ] **Étape 1 : lancer l'audit d'après mise en ligne**
 
-Invoquer la compétence `post-deploiement-site` : santé du site, indexation, référencement, vitesse et sécurité, puis accompagnement pour Google Search Console, Bing Webmaster Tools et la fiche Google Business de Porto-Novo.
+Lancer l'audit d'après mise en ligne : santé du site, indexation, référencement, vitesse et sécurité, puis accompagnement pour Google Search Console, Bing Webmaster Tools et la fiche Google Business de Porto-Novo.
 
 - [ ] **Étape 2 : proposer les suites hors périmètre de la v1**
 

@@ -31,6 +31,6 @@ Depuis `main` uniquement, sur le serveur : `cd ~/apps/technum && bash deploy.sh`
 
 ## Documents
 
-- Conception : [docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/superpowers/specs/2026-10-02-page-accueil-bytechnum-design.md)
-- Plan de réalisation : [docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md](docs/superpowers/plans/2026-10-02-page-accueil-bytechnum.md)
+- Conception : [docs/specs/2026-10-02-page-accueil-bytechnum-design.md](docs/specs/2026-10-02-page-accueil-bytechnum-design.md)
+- Plan de réalisation : [docs/plans/2026-10-02-page-accueil-bytechnum.md](docs/plans/2026-10-02-page-accueil-bytechnum.md)
 - Règles de contribution : [CONTRIBUTING.md](CONTRIBUTING.md)
