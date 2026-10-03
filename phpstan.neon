@@ -4,6 +4,7 @@ parameters:
         - src
         - tests
         - public/index.php
+        - tools/entretien.php
     excludePaths:
         - tests/Fixtures (?)
     tmpDir: var/phpstan
