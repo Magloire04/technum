@@ -454,7 +454,7 @@ TECHNUM/
 │   └── errors/404.php
 ├── storage/rate-limit/      seul dossier écrit par l'application, ignoré par Git
 ├── tests/                   Unit/ et Integration/
-├── docs/superpowers/specs/
+├── docs/                    spécification et plan de réalisation
 ├── composer.json, phpunit.xml.dist, phpstan.neon, .php-cs-fixer.dist.php
 ├── package.json             ESLint et Prettier, en développement seulement
 ├── .env.example
