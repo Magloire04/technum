@@ -9,7 +9,6 @@
  */
 ?>
 <section class="hero" aria-labelledby="titre-accueil">
-  <div class="hero__braces" aria-hidden="true"><span>{</span><span>}</span></div>
   <div class="hero__inner">
     <div class="hero__text">
       <h1 class="hero__title" id="titre-accueil">Des solutions numériques conçues pour vos réalités.</h1>
@@ -19,6 +18,7 @@
         <a class="hero__more" href="#produits">Voir nos produits</a>
       </div>
     </div>
+    <div class="hero__braces" aria-hidden="true"><span>{</span><span>}</span></div>
     <?= $view->render('partials/register') ?>
   </div>
 </section>

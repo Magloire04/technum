@@ -42,6 +42,11 @@ final class HomePageTest extends TestCase
         self::assertSame('{}', str_replace(' ', '', $this->html->text('.hero__braces')));
     }
 
+    public function testHeroBracesShareTheRegisterCell(): void
+    {
+        self::assertSame(1, $this->html->count('.hero__inner > .hero__braces + .register'));
+    }
+
     public function testStripLinksEachProductToItsTab(): void
     {
         self::assertSame(

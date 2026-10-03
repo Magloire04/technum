@@ -381,6 +381,7 @@ main:focus {
 
 .hero {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   padding: var(--space-7) 0 calc(var(--space-9) + 3rem);
   background: var(--blue-dark);
@@ -393,6 +394,7 @@ main:focus {
 
 .hero__braces {
   position: absolute;
+  z-index: -1;
   top: 0.75rem;
   right: -1rem;
   display: flex;
@@ -415,7 +417,6 @@ main:focus {
 }
 
 .hero__inner {
-  position: relative;
   display: grid;
   gap: var(--space-7);
   max-width: var(--container);
@@ -438,10 +439,12 @@ main:focus {
   line-height: 1.65;
 }
 
+/* Sur petit écran, le bouton et le lien s'empilent toujours : leur disposition ne dépend plus
+   de la police des boutons, qui arrive après le premier affichage et décalait le registre. */
 .hero__actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-4) var(--space-6);
   margin-top: var(--space-6);
 }
@@ -462,30 +465,70 @@ main:focus {
   text-decoration-color: var(--white);
 }
 
+@media (min-width: 30rem) {
+  .hero__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
+
 @media (min-width: 60rem) {
   .hero {
     padding: var(--space-8) 0 calc(var(--space-9) + 4rem);
   }
 
+  /* Les accolades partagent la cellule du registre : centrées sur la carte, elles en dépassent
+     de --brace-overhang de chaque côté, plus leur écart, sans toucher le texte. */
   .hero__braces {
-    top: 1.5rem;
-    right: 2rem;
-    gap: 14rem;
-    font-size: 29rem;
+    --brace-overhang: -1rem;
+    position: relative;
+    top: auto;
+    right: auto;
+    display: block;
+    grid-area: 1 / 2;
+    align-self: center;
+    height: 0;
+    margin-inline: calc(-1 * var(--brace-overhang));
+    font-size: 20rem;
+  }
+
+  .hero__braces span {
+    position: absolute;
+    top: 0;
+    margin-top: -0.45em;
   }
 
   .hero__braces span:first-child {
+    left: 0;
     transform: translateX(-4.5rem);
   }
 
   .hero__braces span:last-child {
+    right: 0;
     transform: translateX(4.5rem);
+  }
+
+  .hero__text {
+    grid-area: 1 / 1;
+  }
+
+  .register {
+    grid-area: 1 / 2;
   }
 
   .hero__inner {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     align-items: center;
     gap: var(--space-8);
+  }
+}
+
+/* À partir de 80rem, la colonne du registre ne grandit plus et laisse de la place à côté du texte. */
+@media (min-width: 80rem) {
+  .hero__braces {
+    --brace-overhang: 2.25rem;
+    font-size: 29rem;
   }
 }
 
@@ -597,7 +640,8 @@ main:focus {
 
 .stages {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* 1fr garde au moins la largeur du mot : à 320 px, « Conception » élargit un peu sa colonne au lieu de déborder. */
+  grid-template-columns: repeat(4, 1fr);
   gap: 4px;
   max-width: 28rem;
   margin-top: var(--space-5);
@@ -1524,7 +1568,9 @@ a.service__example:focus-visible {
 
 /* Grands écrans */
 
-@media (min-width: 30rem) {
+/* Registre sur une ligne quand sa carte est assez large : pleine largeur sous 60rem,
+   colonne de droite à partir de 80rem. Entre les deux, le nom garde sa propre ligne. */
+@media (min-width: 30rem) and (max-width: 59.99rem), (min-width: 80rem) {
   .register__link {
     grid-template-areas: 'icon name track stage';
     grid-template-columns: 1.75rem minmax(0, 1fr) auto 6.5rem;
