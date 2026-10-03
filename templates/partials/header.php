@@ -11,6 +11,7 @@
         <li><a href="/#realisations">Réalisations</a></li>
         <li><a href="/#services">Services</a></li>
         <li><a href="/#methode">Méthode</a></li>
+        <li class="site-nav__contact"><a href="/#contact">Parler de votre projet</a></li>
       </ul>
     </nav>
     <a class="button button--primary site-header__cta" href="/#contact">Parler de votre projet</a>

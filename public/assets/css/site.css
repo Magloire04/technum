@@ -303,6 +303,17 @@ main:focus {
   color: var(--blue-dark);
 }
 
+/* Sur petit écran, le bouton de l'en-tête est masqué : le menu propose le contact */
+
+.site-nav__list .site-nav__contact a {
+  color: var(--blue);
+}
+
+.site-nav__list .site-nav__contact a:hover,
+.site-nav__list .site-nav__contact a:focus-visible {
+  color: var(--blue-dark);
+}
+
 .site-nav__toggle {
   display: none;
 }
@@ -952,6 +963,10 @@ main:focus {
 @media (min-width: 40rem) {
   .site-header__cta {
     display: inline-flex;
+  }
+
+  .site-nav__contact {
+    display: none;
   }
 }
 
