@@ -29,22 +29,6 @@ return [
         'linkLabel' => 'Voir le dépôt',
     ],
     [
-        'slug' => 'cypass',
-        'name' => 'CYPASS',
-        'description' => 'Plateforme de cybersécurité pour les PME africaines, co-fondée par Elisée Magloire ATONDE, qui en dirige la technique.',
-        'nature' => 'Entreprise co-fondée',
-        'linkUrl' => 'https://cypass.netlify.app',
-        'linkLabel' => 'Voir le site',
-    ],
-    [
-        'slug' => 'bescat',
-        'name' => "BESCAT Côte d'Ivoire",
-        'description' => 'Refonte du site web.',
-        'nature' => 'Mandat client',
-        'linkUrl' => '',
-        'linkLabel' => '',
-    ],
-    [
         'slug' => 'e-pensionbj',
         'name' => 'e-pensionbj',
         'description' => 'Traitement automatisé de paiements de pensions, basé sur Mojaloop.',

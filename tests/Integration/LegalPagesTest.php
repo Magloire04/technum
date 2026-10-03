@@ -27,7 +27,7 @@ final class LegalPagesTest extends ApplicationTestCase
         self::assertSame(200, $response->status);
         self::assertSame($title, $html->text('h1'));
         self::assertSame('https://bytechnum.com' . $path, $html->attribute('link[rel="canonical"]', 'href'));
-        self::assertContains('mailto:elisee.atonde@bytechnum.com', $html->attributes('.legal a', 'href'));
+        self::assertContains('mailto:technum.services@bytechnum.com', $html->attributes('.legal a', 'href'));
     }
 
     public function testTrailingSlashFromTheBrowserIsAccepted(): void

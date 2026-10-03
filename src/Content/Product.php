@@ -34,6 +34,14 @@ final class Product
         return rtrim($this->url, '/') . '/?ref=bytechnum';
     }
 
+    /**
+     * Un produit sans adresse est présenté sans lien : son accès n'est pas ouvert au public.
+     */
+    public function hasPublicAccess(): bool
+    {
+        return $this->url !== '';
+    }
+
     public function anchor(): string
     {
         return 'produit-' . $this->slug;
