@@ -70,6 +70,26 @@ final class HomePageTest extends TestCase
         self::assertSame(0, $this->html->count('.section__aside'));
     }
 
+    public function testProductTabsWaitForTheScript(): void
+    {
+        $tablist = $this->html->elements('.product-tabs')[0];
+
+        self::assertTrue($tablist->hasAttribute('hidden'));
+        self::assertSame('tablist', $tablist->getAttribute('role'));
+        self::assertSame(
+            ['produit-oeil360-finance', 'produit-dis-oui', 'produit-provia', 'produit-carte-uac'],
+            $this->html->attributes('.product-tabs__tab', 'aria-controls'),
+        );
+        self::assertSame(['onglet-oeil360-finance', 'onglet-dis-oui', 'onglet-provia', 'onglet-carte-uac'], $this->html->attributes('.product-tabs__tab', 'id'));
+        self::assertSame(['true', 'false', 'false', 'false'], $this->html->attributes('.product-tabs__tab', 'aria-selected'));
+        self::assertSame(['0', '-1', '-1', '-1'], $this->html->attributes('.product-tabs__tab', 'tabindex'));
+    }
+
+    public function testEveryProductStaysVisibleWithoutTheScript(): void
+    {
+        self::assertSame(4, $this->html->count('#produits .products > .product:not([hidden])'));
+    }
+
     public function testMenuOffersTheContactOnSmallScreens(): void
     {
         self::assertSame('Parler de votre projet', $this->html->text('.site-nav__list .site-nav__contact a'));

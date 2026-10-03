@@ -31,9 +31,12 @@
       <h2 class="section__title" id="titre-produits">Nos produits</h2>
       <p class="section__context">Quatre outils conçus, hébergés et maintenus par TECHNUM.</p>
     </div>
-    <?php foreach ($products as $product) : ?>
-      <?= $view->render('partials/product', ['product' => $product]) ?>
-    <?php endforeach ?>
+    <?= $view->render('partials/product-tabs') ?>
+    <div class="products">
+      <?php foreach ($products as $product) : ?>
+        <?= $view->render('partials/product', ['product' => $product]) ?>
+      <?php endforeach ?>
+    </div>
   </div>
 </section>
 
