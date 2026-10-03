@@ -180,7 +180,7 @@ final class ContactSubmissionTest extends ApplicationTestCase
 
         self::assertSame(503, $response->status);
         self::assertStringContainsString('+229 01 50 61 73 00', $notice);
-        self::assertStringContainsString('elisee.atonde@bytechnum.com', $notice);
+        self::assertStringContainsString('technum.services@bytechnum.com', $notice);
         self::assertStringContainsString('contact.mail_failed', $this->securityLog());
     }
 

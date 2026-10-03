@@ -93,6 +93,13 @@ final class ContentRepositoryTest extends TestCase
         self::assertSame('img/capture.webp', $product->image->src);
     }
 
+    public function testProductWithoutAddressIsAccepted(): void
+    {
+        $this->write('products', [self::product(['url' => ''])]);
+
+        self::assertFalse($this->repository()->products()[0]->hasPublicAccess());
+    }
+
     /** @return iterable<string, array{array<string, mixed>, string}> */
     public static function invalidProducts(): iterable
     {

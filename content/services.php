@@ -24,7 +24,6 @@ return [
         'description' => 'Sites vitrines, refontes et premières versions de produits, pensés pour le téléphone et les connexions lentes.',
         'examples' => [
             ['label' => 'Dis oui', 'href' => '#produit-dis-oui'],
-            ['label' => "BESCAT Côte d'Ivoire", 'href' => '#realisation-bescat'],
         ],
     ],
     [

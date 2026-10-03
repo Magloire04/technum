@@ -40,6 +40,27 @@ final class ContentModelTest extends TestCase
         self::assertSame('produit-oeil360-finance', $product->anchor());
     }
 
+    public function testProductWithoutAddressHasNoPublicAccess(): void
+    {
+        $product = new Product(
+            slug: 'provia',
+            name: 'PROVIA',
+            url: '',
+            tagline: 'Des stages.',
+            audience: 'Étudiants.',
+            stage: ProductStage::Beta,
+            done: 'Profils.',
+            next: 'Inscriptions.',
+            note: '',
+            icon: 'img/produits/provia-icone.svg',
+            image: new ProductImage('img/a.webp', '', 1280, 800, 'Capture', 'desktop'),
+        );
+
+        self::assertFalse($product->hasPublicAccess());
+        self::assertSame('', $product->host());
+        self::assertTrue(self::product('')->hasPublicAccess());
+    }
+
     public function testProductWithoutNextStepIsStable(): void
     {
         self::assertTrue(self::product('')->isStable());

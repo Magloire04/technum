@@ -59,16 +59,16 @@ final class ContentFilesTest extends TestCase
     {
         $site = $this->content->site();
 
-        self::assertSame('elisee.atonde@bytechnum.com', $site->email);
+        self::assertSame('technum.services@bytechnum.com', $site->email);
         self::assertSame('+229 01 50 61 73 00', $site->phoneDisplay);
         self::assertSame('+2290150617300', $site->phoneE164);
         self::assertSame('2290150617300', $site->whatsappNumber);
         self::assertSame('https://github.com/Magloire04', $site->githubUrl);
     }
 
-    public function testThereAreSixProjectsAndFiveServices(): void
+    public function testThereAreFourProjectsAndFiveServices(): void
     {
-        self::assertCount(6, $this->content->projects());
+        self::assertCount(4, $this->content->projects());
         self::assertCount(5, $this->content->services());
     }
 

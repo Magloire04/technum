@@ -111,7 +111,7 @@ final class ContentRepository
         return new Product(
             slug: $slug,
             name: $this->text($item, 'name', $context),
-            url: $this->httpsUrl($item, 'url', $context),
+            url: $this->httpsUrl($item, 'url', $context, required: false),
             tagline: $this->prose($item, 'tagline', $context),
             audience: $this->prose($item, 'audience', $context),
             stage: $stage,

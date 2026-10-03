@@ -14,7 +14,11 @@
       <h2 class="site-footer__title" id="pied-produits">Produits</h2>
       <ul>
         <?php foreach ($products as $product) : ?>
-          <li><a href="<?= e($product->trackedUrl()) ?>"><?= e($product->name) ?></a></li>
+          <?php if ($product->hasPublicAccess()) : ?>
+            <li><a href="<?= e($product->trackedUrl()) ?>"><?= e($product->name) ?></a></li>
+          <?php else : ?>
+            <li><?= e($product->name) ?></li>
+          <?php endif ?>
         <?php endforeach ?>
       </ul>
     </nav>
