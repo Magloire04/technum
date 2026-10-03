@@ -71,13 +71,20 @@
     </div>
     <ul class="services" role="list">
       <?php foreach ($services as $service) : ?>
-        <?php $last = count($service->examples) - 1; ?>
         <li class="service">
           <h3 class="service__name"><?= e($service->name) ?></h3>
           <p class="service__description"><?= e($service->description) ?></p>
-          <p class="service__examples"><?= e($service->examplesLabel()) ?>&nbsp;:
-            <?php foreach ($service->examples as $index => $example) : ?><?= $index === 0 ? '' : ($index === $last ? ' et ' : ', ') ?><?php if ($example->hasLink()) : ?><a href="<?= e($example->href) ?>"><?= e($example->label) ?></a><?php else : ?><?= e($example->label) ?><?php endif ?><?php endforeach ?>
-          </p>
+          <ul class="service__examples" role="list" aria-label="<?= e($service->examplesLabel()) ?>">
+            <?php foreach ($service->examples as $example) : ?>
+              <li>
+                <?php if ($example->hasLink()) : ?>
+                  <a class="service__example" href="<?= e($example->href) ?>"><?= e($example->label) ?></a>
+                <?php else : ?>
+                  <span class="service__example"><?= e($example->label) ?></span>
+                <?php endif ?>
+              </li>
+            <?php endforeach ?>
+          </ul>
         </li>
       <?php endforeach ?>
     </ul>

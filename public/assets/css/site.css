@@ -1077,42 +1077,70 @@ main:focus {
   }
 }
 
-/* Autres réalisations */
+/* Autres réalisations : cartes blanches sur fond bleu clair */
 
 .projects {
+  display: grid;
+  gap: var(--space-4);
   padding: 0;
-  border-top: 1px solid var(--line);
   list-style: none;
 }
 
 .project {
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-5) 0;
-  border-bottom: 1px solid var(--line);
+  align-content: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-panel);
+  background: var(--white);
+}
+
+.project__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
 }
 
 .project__name {
-  font-size: var(--text-h3);
+  font-size: 1.25rem;
 }
 
 .project__nature {
-  margin-top: var(--space-1);
-  color: var(--charcoal-soft);
-  font-size: var(--text-small);
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  background: var(--ice);
+  color: var(--blue-dark);
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .project__description {
-  max-width: var(--measure);
+  color: var(--charcoal-soft);
 }
 
 .project__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   font-family: var(--font-display);
   font-size: 0.9375rem;
   font-weight: 600;
 }
 
-/* Services */
+@media (min-width: 48rem) {
+  .projects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .project {
+    padding: var(--space-6);
+  }
+}
+
+/* Services : fond charbon, un filet bleu par service, exemples en pastilles */
 
 .services {
   display: grid;
@@ -1121,18 +1149,53 @@ main:focus {
   list-style: none;
 }
 
+.service {
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--blue);
+}
+
 .service__name {
-  font-size: var(--text-h3);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .service__description {
   margin-top: var(--space-2);
-  color: var(--charcoal-soft);
+  color: var(--on-charcoal);
 }
 
 .service__examples {
-  margin-top: var(--space-3);
-  font-size: 0.9375rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.service__example {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  color: var(--white);
+  font-size: 0.8125rem;
+}
+
+a.service__example:hover,
+a.service__example:focus-visible {
+  border-color: var(--white);
+  color: var(--white);
+  text-decoration: none;
+}
+
+@media (min-width: 48rem) {
+  .services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-7);
+  }
 }
 
 /* Méthode : une vraie séquence, donc numérotée */
@@ -1321,21 +1384,6 @@ main:focus {
 
   .site-nav__contact {
     display: none;
-  }
-}
-
-@media (min-width: 48rem) {
-  .project {
-    grid-template-columns: 15rem minmax(0, 1fr);
-    column-gap: var(--space-6);
-  }
-
-  .project__head {
-    grid-row: span 2;
-  }
-
-  .services {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

@@ -90,6 +90,13 @@ final class HomePageTest extends TestCase
         self::assertSame(4, $this->html->count('#produits .products > .product:not([hidden])'));
     }
 
+    public function testServiceExamplesAreClickablePills(): void
+    {
+        self::assertSame(['PROVIA', 'Carte UAC'], $this->html->texts('.service:nth-child(2) .service__example'));
+        self::assertSame(['#produit-provia', '#produit-carte-uac'], $this->html->attributes('.service:nth-child(2) a.service__example', 'href'));
+        self::assertSame('Exemples', $this->html->attribute('.service:nth-child(2) .service__examples', 'aria-label'));
+    }
+
     public function testMenuOffersTheContactOnSmallScreens(): void
     {
         self::assertSame('Parler de votre projet', $this->html->text('.site-nav__list .site-nav__contact a'));
@@ -121,7 +128,6 @@ final class HomePageTest extends TestCase
         self::assertStringContainsString('un produit en pause et un mandat client', $this->html->text('#realisations .section__context'));
         self::assertSame(5, $this->html->count('.service'));
         self::assertSame(5, $this->html->count('.step'));
-        self::assertStringContainsString('PROVIA et Carte UAC', $this->html->text('.service:nth-child(2) .service__examples'));
     }
 
     public function testDirectContactUsesTheValidatedDetails(): void
