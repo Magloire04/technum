@@ -11,6 +11,7 @@ final class Product
         public readonly string $name,
         public readonly string $url,
         public readonly string $tagline,
+        public readonly string $summary,
         public readonly string $audience,
         public readonly ProductStage $stage,
         public readonly string $done,
