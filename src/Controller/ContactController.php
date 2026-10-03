@@ -52,7 +52,10 @@ final class ContactController
         if ($tokenStatus === TokenStatus::Expired) {
             $this->securityLog->record('contact.token_expired', $now);
 
-            return $this->redisplay($contact, $this->formToken->issue($now), 422, 'Le formulaire a expiré. Vérifiez vos informations, puis envoyez-les de nouveau.', $contact->errors);
+            // Le visiteur a déjà eu le formulaire sous les yeux : le nouveau jeton est valable tout de suite.
+            $freshToken = $this->formToken->issue($now - FormToken::MIN_AGE_SECONDS);
+
+            return $this->redisplay($contact, $freshToken, 422, 'Le formulaire a expiré. Vérifiez vos informations, puis envoyez-les de nouveau.', $contact->errors);
         }
 
         // Le jeton est valide : le formulaire réaffiché le garde, pour qu'une correction rapide ne passe pas pour un robot.
