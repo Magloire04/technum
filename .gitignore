@@ -19,3 +19,10 @@
 # Système
 .DS_Store
 Thumbs.db
+
+# Fichiers temporaires des outils
+/var/
+
+# Journaux et limitation des envois, écrits par l'application
+/storage/logs/*
+!/storage/logs/.gitkeep

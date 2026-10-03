@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+        - public/index.php
+    excludePaths:
+        - tests/Fixtures (?)
+    tmpDir: var/phpstan
